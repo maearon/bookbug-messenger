@@ -5,6 +5,7 @@ import { roleRights } from "@/config/roles.js";
 import tokenService from "@/lib/services/token.service.js";
 import { tokenTypes } from "@/config/tokens.js";
 import { User } from "@/models";
+import { connectToDatabase } from "@/lib/mongoose"; // 👈 import thêm
 
 /**
  * Middleware xác thực JWT và quyền truy cập
@@ -28,6 +29,9 @@ export const verifyAuth = async (req, requiredRights = []) => {
     console.error("Auth middleware error:", error);
     throw new ApiError(401, "Token invalid or expired");
   }
+
+  // ✅ Đảm bảo MongoDB đã kết nối trước khi query
+  await connectToDatabase();
 
   // ✅ Lấy user từ MongoDB
   const user = await User.findById(payload.sub);
