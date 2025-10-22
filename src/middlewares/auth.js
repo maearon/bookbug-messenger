@@ -23,7 +23,7 @@ export const verifyAuth = async (req, requiredRights = []) => {
   let payload;
   try {
     // ✅ verify token, KHÔNG truyền expiresIn nữa
-    payload = await tokenService.verifyToken(token, tokenTypes.ACCESS);
+    payload = await tokenService.verifyJwtPayload(token, tokenTypes.ACCESS);
   } catch (error) {
     console.error("Auth middleware error:", error);
     throw new ApiError(401, "Token invalid or expired");

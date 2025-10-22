@@ -53,6 +53,19 @@ const saveToken = async (token, userId, expires, type, blacklisted = false) => {
 /**
  * Verify token and return token doc (or throw an error if it is not valid)
  * @param {string} token
+ * @returns {<Object>}
+ */
+const verifyJwtPayload = (token) => {
+  return jwt.verify(token, config.jwt.secret, {
+    algorithms: ["HS512"],
+    issuer: "http://localhost",
+    audience: ["http://localhost"],
+  });
+};
+
+/**
+ * Verify token and return token doc (or throw an error if it is not valid)
+ * @param {string} token
  * @param {string} type
  * @returns {Promise<Token>}
  */
@@ -125,6 +138,7 @@ const generateVerifyEmailToken = async (user) => {
 const tokenService = {
   generateToken,
   saveToken,
+  verifyJwtPayload,
   verifyToken,
   generateAuthTokens,
   generateResetPasswordToken,
