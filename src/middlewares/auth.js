@@ -2,45 +2,51 @@ import { NextResponse } from "next/server";
 import httpStatus from "http-status";
 import ApiError from "@/utils/ApiError.js";
 import { roleRights } from "@/config/roles.js";
-import tokenService from "@/lib/services/token.service";
+import tokenService from "@/lib/services/token.service.js";
 import { tokenTypes } from "@/config/tokens.js";
+import { User } from "@/models";
 
 /**
  * Middleware xác thực JWT và quyền truy cập
  * @param {Request} req
  * @param {string[]} requiredRights - Các quyền yêu cầu
- * @returns {object} payload - thông tin user đã xác thực
+ * @returns {object} user - thông tin user đã xác thực
  */
-export function verifyAuth(req, requiredRights = []) {
-  const authHeader = req.headers.get("authorization");
+export const verifyAuth = async (req, requiredRights = []) => {
+  const authHeader = req.headers.get("Authorization");
   if (!authHeader?.startsWith("Bearer ")) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate");
+    throw new ApiError(401, "Please authenticate");
   }
 
   const token = authHeader.split(" ")[1];
-  let payload;
 
+  let payload;
   try {
-    payload = tokenService.verifyToken(token, tokenTypes.ACCESS);
+    // ✅ verify token, KHÔNG truyền expiresIn nữa
+    payload = await tokenService.verifyToken(token, tokenTypes.ACCESS);
   } catch (error) {
-    console.log("Auth middleware error:", error);
-    throw new ApiError(httpStatus.UNAUTHORIZED, "Token invalid or expired");
+    console.error("Auth middleware error:", error);
+    throw new ApiError(401, "Token invalid or expired");
   }
 
-  // Kiểm tra quyền
-  if (requiredRights.length) {
-    const userRights = roleRights.get(payload.role) || [];
-    const hasRequiredRights = requiredRights.every((r) => userRights.includes(r));
+  // ✅ Lấy user từ MongoDB
+  const user = await User.findById(payload.sub);
+  if (!user) {
+    throw new ApiError(401, "User not found");
+  }
 
-    // Nếu user không có quyền, kiểm tra xem có phải chính mình không (ví dụ userId)
-    const userId = req.nextUrl?.searchParams?.get("userId");
-    if (!hasRequiredRights && userId !== payload.sub) {
-      throw new ApiError(httpStatus.FORBIDDEN, "Forbidden");
+  // ✅ Kiểm tra quyền
+  if (requiredRights.length) {
+    const userRights = roleRights.get(user.role) || [];
+    const hasRights = requiredRights.every((r) => userRights.includes(r));
+
+    if (!hasRights) {
+      throw new ApiError(403, "Forbidden");
     }
   }
 
-  return payload;
-}
+  return user;
+};
 
 /**
  * Wrapper dùng trong route để áp dụng middleware xác thực
@@ -50,13 +56,14 @@ export function verifyAuth(req, requiredRights = []) {
 export function withAuth(handler, rights = []) {
   return async (req) => {
     try {
-      const user = verifyAuth(req, rights);
-      req.user = user; // lưu user vào req để handler có thể dùng
+      const user = await verifyAuth(req, rights); // ✅ thiếu await ở bản cũ
+      req.user = user;
       return await handler(req, user);
     } catch (err) {
+      console.error("Auth failed:", err);
       return NextResponse.json(
         { message: err.message || "Authentication failed" },
-        { status: err.statusCode || 401 }
+        { status: err.statusCode || httpStatus.UNAUTHORIZED }
       );
     }
   };

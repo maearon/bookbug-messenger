@@ -18,10 +18,10 @@ async function getUsers(req: NextRequest) {
       "limit",
       "page",
     ]);
-    
-    const result = await userService.queryUsers(filter, options);
 
-    return new NextResponse(result, { status: httpStatus.OK });
+    const result = await userService.queryUsers(filter, options);
+    
+    return NextResponse.json(result, { status: httpStatus.OK });
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Get Users failed";
