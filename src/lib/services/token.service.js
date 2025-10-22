@@ -17,12 +17,17 @@ import { tokenTypes } from '@/config/tokens';
  */
 const generateToken = (userId, expires, type, secret = config.jwt.secret) => {
   const payload = {
+    iss: "http://localhost",
+    aud: ["http://localhost"],
     sub: userId,
     iat: moment().unix(),
     exp: expires.unix(),
     type,
   };
-  return jwt.sign(payload, secret);
+  return jwt.sign(payload, secret, {
+    algorithm: "HS512",
+    expiresIn: expires.unix() - moment().unix(),
+  });
 };
 
 /**
@@ -52,7 +57,11 @@ const saveToken = async (token, userId, expires, type, blacklisted = false) => {
  * @returns {Promise<Token>}
  */
 const verifyToken = async (token, type) => {
-  const payload = jwt.verify(token, config.jwt.secret);
+  const payload = jwt.verify(token, config.jwt.secret, {
+    algorithms: ["HS512"],
+    issuer: "http://localhost",
+    audience: ["http://localhost"],
+  });
   const tokenDoc = await Token.findOne({ token, type, user: payload.sub, blacklisted: false });
   if (!tokenDoc) {
     throw new Error('Token not found');
