@@ -1,6 +1,6 @@
 import httpStatus from 'http-status';
-import { User } from '../models/index.js';
-import ApiError from '../utils/ApiError.js';
+import { User } from '@/models/index.js';
+import ApiError from '@/utils/ApiError.js';
 
 /**
  * Create a user
