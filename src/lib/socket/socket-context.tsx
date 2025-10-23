@@ -26,7 +26,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
   // 🟢 Redirect nếu không có user
   useEffect(() => {
     if (!isPending && !user) {
-      router.push("/");
+      // router.push("/");
     }
   }, [isPending, user, router]);
 
