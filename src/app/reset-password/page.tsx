@@ -1,24 +1,39 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import javaService from "@/api/services/javaService";
 import Link from "next/link";
 
 const Edit = () => {
   const router = useRouter();
+  const [ready, setReady] = useState(false);
+  const [token, setToken] = useState<string | null>(null);
   const [state, setState] = useState({
     password: "",
     password_confirmation: "",
-    errorMessage: [] as string[],
   });
   const submitRef = useRef<HTMLInputElement>(null);
   const searchParams = useSearchParams();
-  const reset_token = searchParams.get("token");
 
-  if (!reset_token) {
-    router.push("/login");
-    return null;
+  useEffect(() => {
+    const t = searchParams.get("token");
+    setToken(t);
+    setReady(true);
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (ready && !token) {
+      router.replace("/login");
+    }
+  }, [ready, token, router]);
+
+  if (!ready) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p>Loading...</p>
+      </div>
+    );
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,7 +54,7 @@ const Edit = () => {
     }
 
     try {
-      const res = await javaService.resetForForgotPassword(reset_token, {
+      const res = await javaService.resetForForgotPassword(token!, {
         password: state.password,
       });
 
