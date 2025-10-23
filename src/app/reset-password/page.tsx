@@ -68,7 +68,7 @@ const Edit = () => {
       } else if (res?._status === 400) {
         alert("❌ Password reset failed.");
       } else if (res?.message) {
-        alert(`⚠️ ${res.message}`);
+        alert(`✅ ${res.message}`);
       } else {
         alert("⚠️ Something went wrong.");
       }
