@@ -2,13 +2,14 @@
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
 import type { User } from "../auth"
+// import { authClient } from "@/lib/auth-client";
 
 interface AuthContextType {
   user: User | null
   accessToken: string | null
   isLoading: boolean
-  login: (username: string, password: string) => Promise<void>
-  register: (username: string, email: string, password: string, name: string) => Promise<void>
+  login: (email: string, password: string) => Promise<void>
+  register: (email: string, password: string, name: string) => Promise<void>
   logout: () => void
   refreshAccessToken: () => Promise<void>
 }
@@ -19,6 +20,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [accessToken, setAccessToken] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  // const { data: sessionClient, isPending } = authClient.useSession();
+  // const userClient = sessionClient?.user ?? null;
 
   // Load tokens from localStorage on mount
   useEffect(() => {
@@ -36,7 +39,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Fetch current user
   const fetchCurrentUser = async (token: string) => {
     try {
-      const response = await fetch("/api/auth/me", {
+      const response = await fetch(`/api/v1/users/${user?.id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -57,11 +60,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   // Login function
-  const login = async (username: string, password: string) => {
-    const response = await fetch("/api/auth/login", {
+  const login = async (email: string, password: string) => {
+    const response = await fetch("/api/v1/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ email, password }),
     })
 
     if (!response.ok) {
@@ -71,17 +74,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const data = await response.json()
     setUser(data.user)
-    setAccessToken(data.accessToken)
-    localStorage.setItem("accessToken", data.accessToken)
-    localStorage.setItem("refreshToken", data.refreshToken)
+    setAccessToken(data.token.access.token)
+    localStorage.setItem("accessToken", data.token.access.token)
+    localStorage.setItem("refreshToken", data.token.refresh.token)
   }
 
   // Register function
-  const register = async (username: string, email: string, password: string, name: string) => {
-    const response = await fetch("/api/auth/register", {
+  const register = async (email: string, password: string, name: string) => {
+    const response = await fetch("/api/v1/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, email, password, name }),
+      body: JSON.stringify({ email, password, name }),
     })
 
     if (!response.ok) {
@@ -91,9 +94,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const data = await response.json()
     setUser(data.user)
-    setAccessToken(data.accessToken)
-    localStorage.setItem("accessToken", data.accessToken)
-    localStorage.setItem("refreshToken", data.refreshToken)
+    setAccessToken(data.token.access.token)
+    localStorage.setItem("accessToken", data.token.access.token)
+    localStorage.setItem("refreshToken", data.token.refresh.token)
   }
 
   // Logout function
@@ -114,7 +117,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      const response = await fetch("/api/auth/refresh", {
+      const response = await fetch("/api/v1/auth/refresh-tokens", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ refreshToken }),
@@ -122,9 +125,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (response.ok) {
         const data = await response.json()
-        setAccessToken(data.accessToken)
-        localStorage.setItem("accessToken", data.accessToken)
-        await fetchCurrentUser(data.accessToken)
+        setAccessToken(data.token.access.token)
+        localStorage.setItem("accessToken", data.token.access.token)
+        await fetchCurrentUser(data.token.refresh.token)
       } else {
         logout()
       }

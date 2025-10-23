@@ -1,9 +1,12 @@
 // apps/web/src/app/api/auth/check-email/route.ts
-import { db } from "@/db";
-import { user as users } from "@/db/schema"; // 👉 đổi alias cho rõ ràng
-import { eq } from "drizzle-orm";
+import { connectToDatabase } from "@/lib/mongoose";
+// import { db } from "@/db";
+// import { user as users } from "@/db/schema"; // 👉 đổi alias cho rõ ràng
+// import { eq } from "drizzle-orm";
+import { userService, tokenService } from "@/lib/services";
 
 export async function POST(req: Request) {
+  await connectToDatabase();
   try {
     const { email } = await req.json();
 
@@ -20,15 +23,16 @@ export async function POST(req: Request) {
     }
 
     // Check trong DB
-    const result = await db
-      .select({
-        id: users.id,
-        email: users.email,
-        emailVerified: users.emailVerified, // cột trong better-auth
-      })
-      .from(users)
-      .where(eq(users.email, email))
-      .limit(1);
+    // const result = await db
+    //   .select({
+    //     id: users.id,
+    //     email: users.email,
+    //     emailVerified: users.emailVerified, // cột trong better-auth
+    //   })
+    //   .from(users)
+    //   .where(eq(users.email, email))
+    //   .limit(1);
+    const result = await userService.checkUserExistsWithEmail(email);
 
     if (result.length === 0) {
       return new Response(

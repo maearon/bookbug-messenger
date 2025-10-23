@@ -47,6 +47,17 @@ const getUserByEmail = async (email) => {
 };
 
 /**
+ * ✅ Check if a user exists with a specific email
+ * (Giữ kiểu trả về tương thích với Drizzle: mảng có thể rỗng hoặc chứa 1 object)
+ * @param {string} email
+ * @returns {Promise<Array<User>>}
+ */
+const checkUserExistsWithEmail = async (email) => {
+  const user = await User.findOne({ email }).lean();
+  return user ? [user] : [];
+};
+
+/**
  * Update user by id
  * @param {ObjectId} userId
  * @param {Object} updateBody
@@ -79,6 +90,14 @@ const deleteUserById = async (userId) => {
   return user;
 };
 
-const userService = { createUser, queryUsers, getUserById, getUserByEmail, updateUserById, deleteUserById };
+const userService = { 
+  createUser, 
+  queryUsers, 
+  getUserById, 
+  getUserByEmail, 
+  checkUserExistsWithEmail,
+  updateUserById, 
+  deleteUserById 
+};
 
 export default userService;

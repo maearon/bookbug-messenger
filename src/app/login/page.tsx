@@ -8,6 +8,8 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { useAuth } from "@/lib/auth/auth-context";
+import javaService from "@/api/services/javaService"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -15,6 +17,7 @@ export default function LoginPage() {
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  const { login, register } = useAuth()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -29,10 +32,24 @@ export default function LoginPage() {
       });
 
       if (error) {
-        setError(error.message || "Đăng nhập thất bại")
-      } else {
-        router.push(`/e2ee/t/${data.user.id}`)
+        setError(error.message || "Đăng nhập thất bại");
+        return;
       }
+
+      // 2️⃣ Kiểm tra xem user có tồn tại trong MongoDB không
+      const checkRes = await javaService.checkEmail(email);
+      // if existence is true then it is true, if existence is false or if non-existence is also false
+      const exists = checkRes?.exists ?? false;
+
+      // 3️⃣ Nếu tồn tại → gọi login, nếu chưa thì register
+      if (exists) {
+        await login(email, password);
+      } else {
+        await register(email, password, data?.user?.name || "");
+      }
+
+      // 4️⃣ Chuyển hướng sau khi đăng nhập thành công
+      router.push(`/e2ee/t/${data.user.id}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Đăng nhập thất bại")
     } finally {
