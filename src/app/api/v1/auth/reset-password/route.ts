@@ -28,7 +28,7 @@ export async function POST(req: Request) {
 
     await authService.resetPassword(token, password);
 
-    return new NextResponse(null, { status: httpStatus.NO_CONTENT });
+    return NextResponse.json({ message: "Password reset successfully" }, { status: httpStatus.OK });
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Login failed";
