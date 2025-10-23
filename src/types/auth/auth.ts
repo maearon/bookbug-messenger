@@ -1,7 +1,7 @@
 // 🔐 Types for Password Reset feature
 
 // 👇 Wrapper type for response + _status from interceptor
-export type WithStatus<T> = T & { status: number }
+export type WithStatus<T> = T & { _status: number }
 
 // Password Reset
 export interface SendForgotPasswordEmailParams {

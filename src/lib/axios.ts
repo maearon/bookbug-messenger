@@ -1,4 +1,4 @@
-import axios, { type InternalAxiosRequestConfig } from "axios";
+import axios, { type AxiosResponse, type InternalAxiosRequestConfig } from "axios";
 import { clearTokens, getAccessToken, getRefreshToken, setTokens } from "@/lib/token";
 
 const axiosInstance = axios.create({
@@ -30,9 +30,23 @@ axiosInstance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+// ⚙️ Response: gắn thêm _status vào response để dễ xử lý logic
+axiosInstance.interceptors.response.use(
+  (response: AxiosResponse) => {
+    if (typeof response.data === "object" && response.data !== null) {
+      return {
+        ...response,
+        _status: response.status,
+      };
+    }
+    return response;
+  },
+  (error) => Promise.reject(error)
+);
+
 let isRefreshing = false;
 
-// 🔄 Response: nếu 403 thì refresh token & retry
+// 🔄 Response error: xử lý refresh token nếu gặp 403
 axiosInstance.interceptors.response.use(
   (res) => res,
   async (error) => {
