@@ -74,9 +74,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const data = await response.json()
     setUser(data.user)
-    setAccessToken(data.token.access.token)
-    localStorage.setItem("accessToken", data.token.access.token)
-    localStorage.setItem("refreshToken", data.token.refresh.token)
+    setAccessToken(data.tokens.access.token)
+    localStorage.setItem("accessToken", data.tokens.access.token)
+    localStorage.setItem("refreshToken", data.tokens.refresh.token)
   }
 
   // Register function
@@ -94,9 +94,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const data = await response.json()
     setUser(data.user)
-    setAccessToken(data.token.access.token)
-    localStorage.setItem("accessToken", data.token.access.token)
-    localStorage.setItem("refreshToken", data.token.refresh.token)
+    setAccessToken(data.tokens.access.token)
+    localStorage.setItem("accessToken", data.tokens.access.token)
+    localStorage.setItem("refreshToken", data.tokens.refresh.token)
   }
 
   // Logout function
@@ -125,9 +125,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (response.ok) {
         const data = await response.json()
-        setAccessToken(data.token.access.token)
-        localStorage.setItem("accessToken", data.token.access.token)
-        await fetchCurrentUser(data.token.refresh.token)
+        setAccessToken(data.tokens.access.token)
+        localStorage.setItem("accessToken", data.tokens.access.token)
+        await fetchCurrentUser(data.tokens.refresh.token)
       } else {
         logout()
       }
