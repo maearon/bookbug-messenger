@@ -13,6 +13,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Session } from "@/lib/auth"
+import { useAuth } from "@/lib/auth/auth-context";
 
 interface ChatPageClientProps {
   session: Session | null;
@@ -30,6 +31,7 @@ export default function ChatPageClient({ session }: ChatPageClientProps) {
   const [refreshKey, setRefreshKey] = useState(0)
   const [isDark, setIsDark] = useState(false)
   const [showFriendRequests, setShowFriendRequests] = useState(false)
+  const { logout } = useAuth()
 
   if (isPending) {
     return <div className="flex h-screen items-center justify-center">
@@ -83,6 +85,7 @@ export default function ChatPageClient({ session }: ChatPageClientProps) {
         },
       },
     });
+    logout();
     router.push("/login")
   }
 
