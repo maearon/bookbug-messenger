@@ -47,11 +47,15 @@ const VerifyEmailPage = () => {
         } else if (res?._status === 400) {
           alert("❌ Verify email failed.");
         } else if (res?.message) {
-          alert(`✅ ${res.message}`);
+          // alert(`✅ ${res.message}`);
+          // setStatus("success");
+          const sure = window.confirm(`✅ ${res.message}`);
           setStatus("success");
-          // setTimeout(() => {
-          //   router.push("/login");
-          // }, 3000);
+          if (sure === true) {
+            setTimeout(() => {
+              router.push("/login");
+            }, 3000);
+          }
         } else {
           alert("⚠️ Something went wrong.");
         }
