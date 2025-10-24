@@ -1,6 +1,6 @@
 import { getServerSession } from "@/lib/get-session";
 import type { Metadata } from "next";
-import { redirect, unauthorized } from "next/navigation";
+import { redirect } from "next/navigation";
 import { ResendVerificationButton } from "./resend-verification-button";
 
 export const metadata: Metadata = {
@@ -11,9 +11,7 @@ export default async function SendVerificationEmailPage() {
   const session = await getServerSession();
   const user = session?.user;
 
-  if (!user) unauthorized();
-
-  if (user.emailVerified) redirect("/my-account");
+  if (!user) redirect("/login");
 
   return (
     <main className="flex flex-1 items-center justify-center px-4 text-center">

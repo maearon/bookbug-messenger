@@ -40,8 +40,7 @@ function ProfileContent() {
         <div className="space-y-6">
           {/* Profile Card */}
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0">
-              {!user?.isEmailVerified && <EmailVerificationAlert />}
+            <CardHeader className="flex flex-row items-center justify-between space-y-0">    
               <div className="flex items-center gap-4">
                 <Avatar className="h-20 w-20">
                   <AvatarImage src={user?.image || "/placeholder.svg"} />
@@ -68,6 +67,7 @@ function ProfileContent() {
                 )}
               </div>
             </CardContent>
+            {!user?.isEmailVerified && <EmailVerificationAlert />}
           </Card>
 
           {/* Add Friend Button */}

@@ -27,17 +27,19 @@ const VerifyEmailPage = () => {
   }, [ready, token, router]);
 
   useEffect(() => {
+    if (!ready) return;
+
     if (!token) {
-      flashMessage("error", "Invalid activation link");
+      alert("❌ Invalid activation link");
       setStatus("error");
-      router.push("/");
+      // router.push("/");
       return;
     }
 
     javaService
       .activateAccount(token)
       .then(() => {
-        flashMessage("success", "The account has been activated. Please log in.");
+        alert("✅ The account has been activated. Please log in.");
         setStatus("success");
         setTimeout(() => {
           router.push("/login");
@@ -45,11 +47,11 @@ const VerifyEmailPage = () => {
       })
       .catch((error) => {
         console.error("Activation Error:", error);
-        flashMessage("error", "Account activation failed. Please try again.");
+        alert("❌ Account activation failed. Please try again.");
         setStatus("error");
-        router.push("/");
+        // router.push("/");
       });
-  }, [token, router]);
+  }, [ready, token, router]);
 
   if (!ready) {
     return (

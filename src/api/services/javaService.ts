@@ -106,13 +106,14 @@ const javaService = {
     }
   },
 
-  async activateAccount(activation_token: string): Promise<WithStatus<ApiResponse<User>> | undefined> {
+  async activateAccount(activation_token: string): Promise<void> {
     try {
-      const { data }  = await axiosInstance.patch<WithStatus<ApiResponse<User>>>(`/v1/auth/verify-email?token=${activation_token}`)
-      return data;
-    } catch (error: unknown) {
-      handleNetworkError(error)
-      throw error
+      await axiosInstance.post(`/v1/auth/verify-email?token=${activation_token}`, null, {
+        validateStatus: (status) => status >= 200 && status < 500, // 2xx, 3xx đều hợp lệ
+      });
+    } catch (error) {
+      handleNetworkError(error);
+      throw error;
     }
   },
 
