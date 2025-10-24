@@ -27,7 +27,7 @@ const javaService = {
   // 🔐 Auth
   async checkEmail(email: string): Promise<{ exists: boolean; user: { activated: boolean } } | undefined> {
     try {
-      const { data }  = await axiosInstance.post<WithStatus<{ exists: boolean; user: { activated: boolean } }>>("/api/auth/check-email", { email })
+      const { data } = await axiosInstance.post<WithStatus<{ exists: boolean; user: { activated: boolean } }>>("/api/auth/check-email", { email })
       return data;
     } catch (error: unknown) {
       handleNetworkError(error)
@@ -37,7 +37,7 @@ const javaService = {
 
   async login(params: LoginParams): Promise<WithStatus<SessionResponse> | undefined> {
     try {
-      const { data }  = await api.post<WithStatus<SessionResponse>>("/login", params)
+      const { data } = await api.post<WithStatus<SessionResponse>>("/login", params)
       return data;
     } catch (error: unknown) {
       handleNetworkError(error)
@@ -47,7 +47,7 @@ const javaService = {
 
   async register(params: UserCreateParams): Promise<WithStatus<UserCreateResponse> | undefined> {
     try {
-      const { data }  = await api.post<WithStatus<UserCreateResponse>>("/signup", params)
+      const { data } = await api.post<WithStatus<UserCreateResponse>>("/signup", params)
       return data;
     } catch (error: unknown) {
       handleNetworkError(error)
@@ -66,7 +66,7 @@ const javaService = {
   // 👤 Session
   async getCurrentSession(): Promise<WithStatus<SessionIndexResponse> | undefined> {
     try {
-      const { data }  = await axiosInstance.get<WithStatus<SessionIndexResponse>>("/api/auth/sessions")
+      const { data } = await axiosInstance.get<WithStatus<SessionIndexResponse>>("/api/auth/sessions")
       return data;
     } catch (error: unknown) {
       handleNetworkError(error)
@@ -77,7 +77,7 @@ const javaService = {
   // 🔄 Password Reset
   async sendForgotPasswordEmail(params: SendForgotPasswordEmailParams): Promise<WithStatus<PasswordResetCreateResponse> | undefined> {
     try {
-      const { data }  = await axiosInstance.post<WithStatus<PasswordResetCreateResponse>>("/api/v1/auth/forgot-password", params)
+      const { data } = await axiosInstance.post<WithStatus<PasswordResetCreateResponse>>("/api/v1/auth/forgot-password", params)
       return data;
     } catch (error: unknown) {
       handleNetworkError(error)
@@ -87,7 +87,7 @@ const javaService = {
 
   async resetForForgotPassword(reset_token: string, params: PasswordResetUpdateParams): Promise<WithStatus<PasswordResetUpdateResponse> | undefined> {
     try {
-      const { data }  = await axiosInstance.post<WithStatus<PasswordResetUpdateResponse>>(`/api/v1/auth/reset-password?token=${reset_token}`, params)
+      const { data } = await axiosInstance.post<WithStatus<PasswordResetUpdateResponse>>(`/api/v1/auth/reset-password?token=${reset_token}`, params)
       return data;
     } catch (error: unknown) {
       handleNetworkError(error)
@@ -98,7 +98,7 @@ const javaService = {
   // 📧 Account Activation
   async resendActivationEmail(params: ResendActivationEmailParams): Promise<WithStatus<ResendActivationEmailResponse> | undefined> {
     try {
-      const { data }  = await axiosInstance.post<WithStatus<ResendActivationEmailResponse>>("/api/v1/auth/send-verification-email", params)
+      const { data } = await axiosInstance.post<WithStatus<ResendActivationEmailResponse>>("/api/v1/auth/send-verification-email", params)
       return data;
     } catch (error: unknown) {
       handleNetworkError(error)
@@ -106,21 +106,20 @@ const javaService = {
     }
   },
 
-  async activateAccount(activation_token: string): Promise<void> {
+  async activateAccount(activation_token: string): Promise<WithStatus<ResendActivationEmailResponse> | undefined> {
     try {
-      await axiosInstance.post(`/v1/auth/verify-email?token=${activation_token}`, null, {
-        validateStatus: (status) => status >= 200 && status < 500, // 2xx, 3xx đều hợp lệ
-      });
-    } catch (error) {
-      handleNetworkError(error);
-      throw error;
+      const { data } = await axiosInstance.post<WithStatus<ResendActivationEmailResponse>>(`/api/v1/auth/verify-email?token=${activation_token}`)
+      return data;
+    } catch (error: unknown) {
+      handleNetworkError(error)
+      throw error
     }
   },
 
   // 🧪 Test route
   async test(): Promise<unknown> {
     try {
-      const { data }  = await api.get<unknown>("/")
+      const { data } = await api.get<unknown>("/")
       return data;
     } catch (error: unknown) {
       handleNetworkError(error)

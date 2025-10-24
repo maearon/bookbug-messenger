@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import javaService from "@/api/services/javaService";
-import flashMessage from "@/components/shared/flashMessages";
 import { CheckCircle, Loader2, AlertTriangle } from "lucide-react"; // hoặc Radix icon nếu thích
 
 const VerifyEmailPage = () => {
@@ -36,21 +35,33 @@ const VerifyEmailPage = () => {
       return;
     }
 
-    javaService
-      .activateAccount(token)
-      .then(() => {
-        alert("✅ The account has been activated. Please log in.");
-        setStatus("success");
-        setTimeout(() => {
-          router.push("/login");
-        }, 3000);
-      })
-      .catch((error) => {
+    const activate = async () => {
+      try {
+        const res = await javaService.activateAccount(token);
+        if (res?._status === 200) {
+          // alert("✅ The account has been activated. Please log in.");
+          alert(`✅ ${res.message}`);
+          setStatus("success");
+          // setTimeout(() => {
+          //   router.push("/login");
+          // }, 3000);
+        } else if (res?._status === 400) {
+          alert("❌ Password reset failed.");
+        } else {
+          alert("⚠️ Something went wrong.");
+        }
+      } catch (error) {
         console.error("Activation Error:", error);
         alert("❌ Account activation failed. Please try again.");
         setStatus("error");
         // router.push("/");
-      });
+      } finally {
+        // alert("❌ Password reset failed.");
+        // alert("⚠️ Something went wrong.");
+      }
+    };
+
+    activate();
   }, [ready, token, router]);
 
   if (!ready) {

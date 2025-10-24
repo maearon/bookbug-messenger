@@ -35,9 +35,7 @@ export interface ResendActivationEmailParams {
 }
 
 export interface ResendActivationEmailResponse {
-  user_id?: string
-  flash?: [message_type: string, message: string]
-  error?: string[]
+  message?: string
 }
 
 export interface Response<User> {

@@ -18,7 +18,7 @@ export async function POST(req: Request) {
 
     await authService.verifyEmail(token);
 
-    return new NextResponse(null, { status: httpStatus.NO_CONTENT });
+    return NextResponse.json({ message: "The account has been activated. Please log in." }, { status: httpStatus.OK });
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Verify email failed";
