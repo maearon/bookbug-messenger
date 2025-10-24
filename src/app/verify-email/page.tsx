@@ -39,14 +39,19 @@ const VerifyEmailPage = () => {
       try {
         const res = await javaService.activateAccount(token);
         if (res?._status === 200) {
-          // alert("✅ The account has been activated. Please log in.");
+          alert("✅ Verify email successfully.");
+          setStatus("success");
+          setTimeout(() => {
+            router.push("/login");
+          }, 3000);
+        } else if (res?._status === 400) {
+          alert("❌ Verify email failed.");
+        } else if (res?.message) {
           alert(`✅ ${res.message}`);
           setStatus("success");
           // setTimeout(() => {
           //   router.push("/login");
           // }, 3000);
-        } else if (res?._status === 400) {
-          alert("❌ Password reset failed.");
         } else {
           alert("⚠️ Something went wrong.");
         }
