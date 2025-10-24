@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Session } from "@/lib/auth"
 import { useAuth } from "@/lib/auth/auth-context";
+import { AddFriendDialog } from "@/components/friends/add-friend-dialog";
 
 interface ChatPageClientProps {
   session: Session | null;
@@ -116,6 +117,10 @@ export default function ChatPageClient({ session }: ChatPageClientProps) {
             <Button variant="ghost" size="icon" className="h-6 w-6">
               <Plus className="h-4 w-4 text-gray-500" />
             </Button>
+            {/* Add Friend Button */}
+            <div className="flex justify-end">
+              <AddFriendDialog />
+            </div>
           </div>
         </div>
 
