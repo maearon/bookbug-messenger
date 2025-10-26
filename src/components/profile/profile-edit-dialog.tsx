@@ -34,7 +34,7 @@ export function ProfileEditDialog() {
     setIsLoading(true)
 
     try {
-      const response = await fetch(`https://node-boilerplate-pww8.onrender.com/v1/users/${user?.id}`, {
+      const response = await fetch(`/api/v1/users/${user?.id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

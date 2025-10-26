@@ -34,3 +34,25 @@ async function getUser(req: NextRequest, { params }: { params: { userId: string 
 }
 
 export const GET = withAuth(getUser, ["getUsers"]);
+
+export async function PATCH(
+  req: Request,
+  { params }: { params: { userId: string } }
+) {
+  await connectToDatabase();
+  try {
+    const { name }: { name: string } = await req.json();
+
+    const user = await userService.updateUserById(params.userId, { name });
+
+    return NextResponse.json({ user }, { status: 200 });
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Login failed";
+
+    return NextResponse.json(
+      { message },
+      { status: 400 }
+    );
+  }
+}
