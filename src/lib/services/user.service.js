@@ -96,7 +96,6 @@ const deleteUserById = async (userId) => {
  * @param {string} keyword
  * @returns {Promise<Array<User>>}
  */
-import { removeVietnameseTones } from "@/utils/textUtils"; // Tạo file utils để tái sử dụng
 
 const searchUsersByKeyword = async (keyword) => {
   if (!keyword || typeof keyword !== "string") return [];
