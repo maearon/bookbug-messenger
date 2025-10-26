@@ -1,6 +1,7 @@
 import httpStatus from 'http-status';
 import { User } from '@/models/index';
 import ApiError from '@/utils/ApiError';
+import { removeVietnameseTones } from "@/utils/textUtils";
 
 /**
  * Create a user
@@ -91,15 +92,50 @@ const deleteUserById = async (userId) => {
 };
 
 /**
- * Search users by name (case-insensitive, partial match)
- * @param {string} name
+ * Search users by keyword (case-insensitive, partial match)
+ * @param {string} keyword
  * @returns {Promise<Array<User>>}
  */
-const searchUsersByName = async (name) => {
-  if (!name || typeof name !== "string") return [];
-  // Dùng regex không phân biệt hoa thường
-  const regex = new RegExp(name, "i");
-  return User.find({ name: regex }).lean();
+import { removeVietnameseTones } from "@/utils/textUtils"; // Tạo file utils để tái sử dụng
+
+const searchUsersByKeyword = async (keyword) => {
+  if (!keyword || typeof keyword !== "string") return [];
+
+  const normalized = removeVietnameseTones(keyword).toLowerCase();
+  const regex = new RegExp(normalized, "i");
+
+  // Lấy tất cả user, normalize rồi lọc (cách 1: với DB ít)
+  // Hoặc dùng MongoDB $or (cách 2: hiệu quả hơn nếu DB lớn)
+  return User.aggregate([
+    {
+      $addFields: {
+        normalizedName: {
+          $function: {
+            body: function (name) {
+              if (!name) return "";
+              return name
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase();
+            },
+            args: ["$name"],
+            lang: "js"
+          }
+        },
+        normalizedEmail: {
+          $toLower: "$email"
+        }
+      }
+    },
+    {
+      $match: {
+        $or: [
+          { normalizedName: { $regex: regex } },
+          { normalizedEmail: { $regex: regex } }
+        ]
+      }
+    }
+  ]);
 };
 
 const userService = { 
@@ -110,7 +146,7 @@ const userService = {
   checkUserExistsWithEmail,
   updateUserById, 
   deleteUserById,
-  searchUsersByName,
+  searchUsersByKeyword,
 };
 
 export default userService;

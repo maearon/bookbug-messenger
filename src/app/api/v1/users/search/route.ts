@@ -7,8 +7,8 @@ import { userService } from "@/lib/services";
 export async function GET(req: NextRequest) {
   await connectToDatabase();
   try {
-    const name = req.nextUrl.searchParams.get("name") || "";
-    const users = await userService.searchUsersByName(name);
+    const keyword = req.nextUrl.searchParams.get("q") || "";
+    const users = await userService.searchUsersByKeyword(keyword);
 
     return NextResponse.json({ users }, { status: httpStatus.OK });
   } catch (error) {

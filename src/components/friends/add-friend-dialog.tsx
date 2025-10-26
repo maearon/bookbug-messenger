@@ -32,7 +32,7 @@ export function AddFriendDialog() {
 
     try {
       const response = await fetch(
-        `/api/v1/users/search?name=${encodeURIComponent(searchQuery)}`,
+        `/api/v1/users/search?q=${encodeURIComponent(searchQuery)}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -91,7 +91,7 @@ export function AddFriendDialog() {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add Friend</DialogTitle>
-          <DialogDescription>Search for users by name to send a friend request</DialogDescription>
+          <DialogDescription>Search for users to send friend requests</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
