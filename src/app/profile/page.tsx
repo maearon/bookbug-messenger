@@ -43,7 +43,7 @@ function ProfileContent() {
             <CardHeader className="flex flex-row items-center justify-between space-y-0">    
               <div className="flex items-center gap-4">
                 <Avatar className="h-20 w-20">
-                  <AvatarImage src={user?.image || "/placeholder.svg"} />
+                  <AvatarImage src={user?.image || "/avatar-placeholder.png"} />
                   <AvatarFallback className="text-2xl">{user?.name[0]}</AvatarFallback>
                 </Avatar>
                 <div>

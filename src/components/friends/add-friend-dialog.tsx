@@ -123,7 +123,7 @@ export function AddFriendDialog() {
             {searchResults.map((user) => (
               <div key={user.id} className="flex items-center gap-3 rounded-lg border p-3 hover:bg-muted/30">
                 <Avatar>
-                  <AvatarImage src={user.image || "/placeholder.svg"} />
+                  <AvatarImage src={user.image || "/avatar-placeholder.png"} />
                   <AvatarFallback>{user.name?.[0]?.toUpperCase() || "U"}</AvatarFallback>
                 </Avatar>
                 <div className="flex-1">
