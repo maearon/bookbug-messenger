@@ -14,7 +14,6 @@ const GroupChatList = () => {
         <GroupChatCard key={conversation._id} conversation={conversation} />
       ))}
     </div>
-  )>
   )
 }
 
