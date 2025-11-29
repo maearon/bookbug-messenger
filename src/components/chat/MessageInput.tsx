@@ -1,3 +1,4 @@
+"use client"
 import { useAuthStore } from '@/stores/useAuthStore'
 import { Conversation } from '@/types/chat'
 import { useState } from 'react'
