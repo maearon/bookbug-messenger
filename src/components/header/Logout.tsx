@@ -26,7 +26,7 @@ export const LogOut = () => {
     }
     await authClient.signOut({
       fetchOptions: {
-        onSuccess: () => {
+        onSuccess: async () => {
           router.push("/");
           router.refresh();
           localStorage.clear();

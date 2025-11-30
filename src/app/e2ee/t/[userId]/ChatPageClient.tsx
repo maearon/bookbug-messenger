@@ -70,7 +70,7 @@ export default function ChatPageClient({ session }: ChatPageClientProps) {
     }
     await authClient.signOut({
       fetchOptions: {
-        onSuccess: () => {
+        onSuccess: async () => {
           router.push("/");
           router.refresh();
           localStorage.clear();
