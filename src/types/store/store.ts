@@ -1,6 +1,7 @@
 import { Conversation, Message } from './../chat/models';
 import { user } from './../../db/schema';
 import { User } from '../user';
+import { Socket } from 'socket.io-client';
 export type Store = {
   id: string
   name: string
@@ -58,4 +59,11 @@ export interface ChatState {
   fetchMessages: (conversationId: string, cursor?: string) => Promise<void>;
   sendMessage: (recipientId: string, content: string, imgUrl?: string) => Promise<void>;
   sendGroupMessage: (conversationId: string, content: string, imgUrl?: string) => Promise<void>;
+}
+
+export interface SocketState {
+  socket: Socket | null;
+  onlineUsers: string[];
+  connectSocket: () => void;
+  disconnectSocket: () => void;
 }

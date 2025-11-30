@@ -7,18 +7,21 @@ import { cn } from '@/lib/utils';
 import UserAvatar from './UserAvatar';
 import StatusBadge from './StatusBadge';
 import UnreadCountBadge from './UnreadCountBadge';
+import { useSocketStore } from '@/stores/useSocketStore';
 // import { useAuthStore } from '@/stores/useAuthStore';
 
 const DirectMessageCard = ({conversation}: {conversation: Conversation}) => {
   // const { user } = useAuthStore();
-  const { data: sessionClient, isPending } = authClient.useSession();
+  const { data: sessionClient } = authClient.useSession();
   const user = sessionClient?.user ?? null;
   const { activeConversationId, setActiveConversation, messages, fetchMessages } = useChatStore();
+  const conversations = useChatStore();
+  const { onlineUsers } = useSocketStore();
   if (!user) {
     return null;
   }
-  const otherUser = conversation.participants.find(participant => participant.id !== user.id);
-  if (!otherUser) {
+  const otherParticipant = conversation.participants.find(participant => participant._id !== user.id);
+  if (!otherParticipant) {
     return null;
   }
   const unreadCount = conversation.unreadCounts[user.id] || 0;
@@ -29,16 +32,15 @@ const DirectMessageCard = ({conversation}: {conversation: Conversation}) => {
       await fetchMessages(id);
     }
   };
-  const conversations = useChatStore();
   if (!conversations) {
     return;
   }
-  const groupChats = conversations.conversations.filter(conv => conv.type === "group");
+  // const groupChats = conversations.conversations.filter(conv => conv.type === "group");
   return (
     <ChatCard
       key={conversation._id}
       conversationId={conversation._id}
-      name={otherUser.displayName ?? "Unknown User"}
+      name={otherParticipant.displayName ?? "Unknown User"}
       timeStamp={
         conversation.lastMessage?.createdAt 
           ? new Date(conversation.lastMessage.createdAt) 
@@ -49,10 +51,12 @@ const DirectMessageCard = ({conversation}: {conversation: Conversation}) => {
       onSelect={() => handleSelectConversation(conversation._id)}
       leftSection={
         <>
-          <UserAvatar type="sidebar" name={otherUser.displayName ?? ""} 
-            avatarUrl={otherUser.avatarUrl ?? undefined}
+          <UserAvatar type="sidebar" name={otherParticipant.displayName ?? ""} 
+            avatarUrl={otherParticipant.avatarUrl ?? undefined}
           />
-          <StatusBadge status={"offline"} />
+          <StatusBadge 
+            status={onlineUsers.includes(otherParticipant?._id ?? "") ? "online" : "offline"}
+          />
           {
             unreadCount && unreadCount > 0 && (
               <UnreadCountBadge unreadCount={unreadCount} />

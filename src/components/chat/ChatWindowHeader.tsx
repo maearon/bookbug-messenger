@@ -5,11 +5,14 @@ import { authClient } from "@/lib/auth-client";
 import { Separator } from "../ui/separator";
 import UserAvatar from "./UserAvatar";
 import GroupChatAvatar from "./GroupChatAvatar";
+import { useSocketStore } from "@/stores/useSocketStore";
+import StatusBadge from "./StatusBadge";
 
 const ChatWindowHeader = ({ chat: propChat }: { chat?: Conversation }) => {
   const {conversations, activeConversationId} = useChatStore();
   const { data: sessionClient } = authClient.useSession();
   const user = sessionClient?.user ?? null;
+  const { onlineUsers } = useSocketStore();
   const chat = propChat ?? conversations.find(c => c.id === activeConversationId) ?? undefined;
 
   if (!chat) {
@@ -44,11 +47,16 @@ const ChatWindowHeader = ({ chat: propChat }: { chat?: Conversation }) => {
           {
             chat.type === "direct" ? (
               // Direct message avatar placeholder
-              <UserAvatar
-                type={"sidebar"}
-                name={otherParticipant?.displayName || "Unknown User"}
-                avatarUrl={otherParticipant?.avatarUrl || undefined}
-              />
+              <>
+                <UserAvatar
+                  type={"sidebar"}
+                  name={otherParticipant?.displayName || "Unknown User"}
+                  avatarUrl={otherParticipant?.avatarUrl || undefined}
+                />
+                <StatusBadge 
+                  status={onlineUsers.includes(otherParticipant?._id ?? "") ? "online" : "offline"}
+                />
+              </>
             ) : (
               // Group avatar placeholder
               chat.type === "group" && "participants" in chat && chat.participants ? (
