@@ -148,7 +148,7 @@ const BASE_URL = process.env.NODE_ENV === "development"
   ? "http://localhost:5005/api"
   // : "https://adidas-microservices.onrender.com/api"
   // : "https://spring-boilerplate.onrender.com/api"
-  : "https://node-boilerplate-pww8.onrender.com/api"
+  : "https://node-boilerplate-pww8.onrender.com/v1"
 
 // CSRF & credentials setup
 axios.defaults.xsrfCookieName = "CSRF-TOKEN"
