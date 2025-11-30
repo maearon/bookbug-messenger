@@ -1,5 +1,6 @@
 import { Conversation, Message } from './../chat/models';
 import { user } from './../../db/schema';
+import { User } from '../user';
 export type Store = {
   id: string
   name: string
@@ -13,17 +14,25 @@ export type Store = {
 }
 
 export interface AuthState {
-  signUp: {
-    username: string
-    email: string
-    password: string  
-    firstNme: string
+  accessToken: string | null;
+  refreshToken: string | null;
+  user: User | null;
+  loading: boolean;
+
+  setAccessToken: (accessToken: string) => void;
+  setRefreshToken: (refreshToken: string) => void;
+  clearState: () => void;
+  signUp: (
+    username: string,
+    password: string,
+    email: string,
+    firstName: string,
     lastName: string
-  },
-  signIn: {username: string, password: string},
-  signOut: Promise<void>,
-  fetchMe: Promise<void>,
-  refresh: Promise<void>,
+  ) => Promise<void>;
+  signIn: (username: string, password: string) => Promise<void>;
+  signOut: () => Promise<void>;
+  fetchMe: () => Promise<void>;
+  refresh: () => Promise<void>;
 }
 
 export interface ThemeState {
