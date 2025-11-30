@@ -9,8 +9,10 @@ import Link from "next/link";
 import { Loader2, LogOutIcon } from "lucide-react";
 import { LoadingDots } from "../products/enhanced-product-form";
 import { Button } from "../ui/button";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 export const LogOut = () => {
+  const { signOut } = useAuthStore();
   const t = useTranslations("auth");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -34,6 +36,7 @@ export const LogOut = () => {
             const name = cookie.split("=")[0].trim();
             document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
           });
+          await signOut();
           setTimeout(() => {
             window.location.href = "/";
           }, 50);

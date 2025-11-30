@@ -16,12 +16,14 @@ import { Session } from "@/lib/auth"
 import { useAuth } from "@/lib/auth/auth-context";
 import { AddFriendDialog } from "@/components/friends/add-friend-dialog";
 import { useTheme } from "next-themes";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 interface ChatPageClientProps {
   session: Session | null;
 }
 
 export default function ChatPageClient({ session }: ChatPageClientProps) {
+  const { signOut } = useAuthStore();
   const { 
       data: sessionClient, 
       isPending, //loading state
@@ -77,6 +79,7 @@ export default function ChatPageClient({ session }: ChatPageClientProps) {
             const name = cookie.split("=")[0].trim();
             document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
           });
+          await signOut();
           setTimeout(() => {
             window.location.href = "/";
           }, 50);
