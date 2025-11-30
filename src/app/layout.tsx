@@ -9,6 +9,7 @@ import { SocketProvider } from "@/lib/socket/socket-context"
 import { AuthProvider } from "@/lib/auth/auth-context"
 import { ReduxProvider } from "@/providers/redux-provider";
 import { ThemeProvider } from "next-themes"
+import { Toaster } from "sonner"
 
 export const metadata: Metadata = {
   title: "Moji - Modern Chat App",
@@ -35,6 +36,7 @@ export default function RootLayout({
                   disableTransitionOnChange
                 >
                   {children}
+                  <Toaster richColors />
                 </ThemeProvider>
               </AuthProvider>
             </SocketProvider>
