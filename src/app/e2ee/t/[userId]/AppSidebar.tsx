@@ -137,11 +137,11 @@ const AppSidebar = ({
       <SidebarContent className="beautiful-scrollbar">
       {/* New Chat */}
       <div className="p-4">
-      <button className="flex w-full items-center gap-3 rounded-xl bg-purple-50 p-3 text-left transition-colors hover:bg-purple-100">
+      <button className="flex w-full items-center gap-3 rounded-xl bg-gray-0 p-3 text-left transition-colors hover:bg-gray-100 dark:hover:bg-gray-800">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-600">
           <MessageCircle className="h-5 w-5 text-white" />
           </div>
-          <span className="font-medium text-gray-900">Gửi Tin Nhắn Mới</span>
+          <span className="font-medium text-gray-900 dark:text-white">Gửi Tin Nhắn Mới</span>
       </button>
       </div>
 

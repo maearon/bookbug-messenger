@@ -7,7 +7,7 @@ import "./globals.css"
 import { Suspense } from "react"
 import { SocketProvider } from "@/lib/socket/socket-context"
 import { AuthProvider } from "@/lib/auth/auth-context"
-import { ReduxProvider } from "@/providers/redux-provider";
+import { ReduxProvider } from "@/providers/redux-provider"
 import { ThemeProvider } from "next-themes"
 import { Toaster } from "sonner"
 
@@ -19,29 +19,34 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode
-}>) {
+}) {
   return (
-    <html lang="en">
-      <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
-        <Suspense fallback={<div>Loading...</div>}>
+    <html lang="en" suppressHydrationWarning>
+      <body
+        suppressHydrationWarning
+        className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}
+      >
+        {/* ThemeProvider phải nằm ngoài Suspense */}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
           <ReduxProvider>
             <SocketProvider>
               <AuthProvider>
-                <ThemeProvider
-                  attribute="class"
-                  defaultTheme="dark"
-                  enableSystem
-                  disableTransitionOnChange
-                >
+                <Suspense fallback={<div>Loading...</div>}>
                   {children}
-                  <Toaster richColors />
-                </ThemeProvider>
+                </Suspense>
+                <Toaster richColors />
               </AuthProvider>
             </SocketProvider>
           </ReduxProvider>
-        </Suspense>
+        </ThemeProvider>
+
         <Analytics />
       </body>
     </html>
