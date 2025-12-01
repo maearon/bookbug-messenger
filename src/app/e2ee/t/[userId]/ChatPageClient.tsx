@@ -40,8 +40,12 @@ export default function ChatPageClient({ session }: ChatPageClientProps) {
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen bg-background">        
-        <AppSidebar session={session} refreshKey={refreshKey} />
+      <div className="flex flex-1 bg-background">        
+        <AppSidebar 
+          session={session} 
+          refreshKey={refreshKey}
+          onShowFriendRequests={() => setShowFriendRequests(true)}
+        />
 
         <div className="flex h-screen w-full p-2">
           <ChatWindowLayout selectedConversationId={selectedConversationId} />

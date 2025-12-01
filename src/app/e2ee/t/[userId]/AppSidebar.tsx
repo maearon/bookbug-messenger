@@ -18,9 +18,10 @@ import { useAuthStore } from "@/stores/useAuthStore";
 interface AppSidebarProps {
   session: Session | null;
   refreshKey: number;
+  onShowFriendRequests: () => void;
 }
 
-const AppSidebar = ({ session, refreshKey }: AppSidebarProps) => {
+const AppSidebar = ({ session, refreshKey, onShowFriendRequests }: AppSidebarProps) => {
   const { signOut } = useAuthStore();
   const { 
       data: sessionClient, 
@@ -31,7 +32,6 @@ const AppSidebar = ({ session, refreshKey }: AppSidebarProps) => {
   const router = useRouter()
   const [selectedConversationId, setSelectedConversationId] = useState<string>()
   const { theme, setTheme } = useTheme();
-  const [showFriendRequests, setShowFriendRequests] = useState(false)
   const { logout } = useAuth()
 
   if (isPending) {
@@ -104,9 +104,9 @@ const AppSidebar = ({ session, refreshKey }: AppSidebarProps) => {
       <div className="px-4">
       <div className="mb-2 flex items-center justify-between">
           <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-500">NHÓM CHAT</h2>
-          <Button variant="ghost" size="icon" className="h-6 w-6">
+          {/* <Button variant="ghost" size="icon" className="h-6 w-6">
           <Plus className="h-4 w-4 text-gray-500" />
-          </Button>
+          </Button> */}
           {/* Add Friend Button */}
           <div className="flex justify-end">
           <AddFriendDialog />
@@ -117,7 +117,7 @@ const AppSidebar = ({ session, refreshKey }: AppSidebarProps) => {
       <div className="px-4">
       <div className="mb-2 flex items-center justify-between">
           <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-500">BẠN BÈ</h2>
-          <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => setShowFriendRequests(true)}>
+          <Button variant="ghost" size="icon" className="h-6 w-6" onClick={onShowFriendRequests}>
           <UserPlus className="h-4 w-4 text-gray-500" />
           </Button>
       </div>
