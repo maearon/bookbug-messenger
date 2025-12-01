@@ -90,13 +90,13 @@ export function MessageList({ conversationId }: MessageListProps) {
   return (
     <div className="flex h-full flex-col">
       {/* Chat Header */}
-      <div className="flex items-center gap-3 border-b border-gray-200 bg-white p-4">
+      <div className="flex items-center gap-3 border-b border-gray-200 dark:border-gray-800 bg-background p-4">
         <Avatar className="h-10 w-10">
-          <AvatarImage src="/placeholder.svg" />
-          <AvatarFallback>U</AvatarFallback>
+          <AvatarImage src="/avatar-placeholder.png" />
+          <AvatarFallback>M</AvatarFallback>
         </Avatar>
         <div className="flex-1">
-          <h3 className="font-semibold text-gray-900">User Name</h3>
+          <h3 className="font-semibold text-gray-900 dark:text-white">Nguyễn Đức Mạnh</h3>
           <div className="flex items-center gap-1">
             <div className="h-2 w-2 rounded-full bg-green-500" />
             <span className="text-xs text-gray-500">Online</span>
@@ -105,7 +105,7 @@ export function MessageList({ conversationId }: MessageListProps) {
       </div>
 
       {/* Messages */}
-      <ScrollArea className="flex-1 bg-gray-50 p-4" ref={scrollRef}>
+      <ScrollArea className="flex-1 bg-background p-4" ref={scrollRef}>
         <div className="space-y-4">
           {messages.map((message) => {
             const isOwnMessage = message.senderId === user?.id

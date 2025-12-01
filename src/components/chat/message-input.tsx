@@ -99,7 +99,7 @@ export function MessageInput({ conversationId, onMessageSent }: MessageInputProp
   }
 
   return (
-    <div className="flex items-center gap-3 border-t border-gray-200 bg-white p-4">
+    <div className="flex items-center gap-3 border-t border-gray-200 dark:border-gray-800 bg-background p-4">
       <Button variant="ghost" size="icon" className="h-10 w-10 text-gray-500 hover:text-gray-700">
         <Paperclip className="h-5 w-5" />
       </Button>

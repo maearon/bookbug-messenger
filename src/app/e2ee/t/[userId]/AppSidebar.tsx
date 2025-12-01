@@ -1,5 +1,6 @@
 "use client"
 
+import * as React from "react"
 import { useState } from "react"
 import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button"
@@ -14,14 +15,23 @@ import { useAuth } from "@/lib/auth/auth-context";
 import { AddFriendDialog } from "@/components/friends/add-friend-dialog";
 import { useTheme } from "next-themes";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupAction, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
+import GroupChatList from "@/components/chat/GroupChatList";
+import { NavUser } from "@/components/sidebar/nav-user";
+import { mapBetterAuthUserToMongoUser } from "@/lib/mappers/user-data-to-simple-user";
 
-interface AppSidebarProps {
-  session: Session | null;
-  refreshKey: number;
-  onShowFriendRequests: () => void;
+type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
+  session: Session | null
+  refreshKey: number
+  onShowFriendRequests: () => void
 }
 
-const AppSidebar = ({ session, refreshKey, onShowFriendRequests }: AppSidebarProps) => {
+const AppSidebar = ({
+  session,
+  refreshKey,
+  onShowFriendRequests,
+  ...sidebarProps
+}: AppSidebarProps) => {
   const { signOut } = useAuthStore();
   const { 
       data: sessionClient, 
@@ -82,7 +92,18 @@ const AppSidebar = ({ session, refreshKey, onShowFriendRequests }: AppSidebarPro
   }
 
   return (
-    <div className="flex w-[360px] flex-col bg-sidebar">
+    <Sidebar variant="inset" {...sidebarProps}>
+    {/* <div className="flex w-[360px] flex-col bg-sidebar"> */}
+      {/* Header */}
+      {/* <SidebarHeader>
+      <SidebarMenu>
+      <SidebarMenuItem>
+      <SidebarMenuButton 
+        size="lg" 
+        asChild
+        className="bg-gradient-primary"
+      >
+      <a href="#"> */}
       <div className="flex items-center justify-between rounded-br-3xl rounded-tr-3xl bg-gradient-to-r from-purple-600 to-fuchsia-600 p-4">
       <h1 className="text-2xl font-bold text-white">Moji</h1>
       <div className="flex items-center gap-2">
@@ -91,7 +112,15 @@ const AppSidebar = ({ session, refreshKey, onShowFriendRequests }: AppSidebarPro
           </Button>
       </div>
       </div>
+      {/* </a>
+      </SidebarMenuButton>
+      </SidebarMenuItem>
+      </SidebarMenu>
+      </SidebarHeader> */}
 
+      {/* Content */}
+      <SidebarContent className="beautiful-scrollbar">
+      {/* New Chat */}
       <div className="p-4">
       <button className="flex w-full items-center gap-3 rounded-xl bg-purple-50 p-3 text-left transition-colors hover:bg-purple-100">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-600">
@@ -130,9 +159,10 @@ const AppSidebar = ({ session, refreshKey, onShowFriendRequests }: AppSidebarPro
           onSelectConversation={setSelectedConversationId}
       />
       </div>
+      </SidebarContent>
 
       <div className="border-t border-gray-200 dark:border-gray-800 p-3">
-      <DropdownMenu>
+      {/* <DropdownMenu>
           <DropdownMenuTrigger asChild>
           <button className="flex w-full items-center gap-3 rounded-xl p-2 transition-colors hover:bg-gray-100 group">
               <Avatar className="h-10 w-10">
@@ -164,9 +194,14 @@ const AppSidebar = ({ session, refreshKey, onShowFriendRequests }: AppSidebarPro
               <span>Log out</span>
           </DropdownMenuItem>
           </DropdownMenuContent>
-      </DropdownMenu>
+      </DropdownMenu> */}
+      {/* Footer */}
+      <SidebarFooter>
+        {user && <NavUser user={mapBetterAuthUserToMongoUser(user)} />}
+      </SidebarFooter>
       </div>
-    </div>
+    {/* </div> */}
+    </Sidebar>
   )
 }
 

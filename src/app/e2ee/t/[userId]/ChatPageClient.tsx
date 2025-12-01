@@ -23,7 +23,7 @@ export default function ChatPageClient({ session }: ChatPageClientProps) {
       refetch //refetch the session
   } = authClient.useSession()
   const router = useRouter()
-  const [selectedConversationId, setSelectedConversationId] = useState<string>()
+  const [selectedConversationId, setSelectedConversationId] = useState<string>("YnhAyaqjpK7Z7SCs0FWO1M2CuhSBhD1h")
   const [refreshKey, setRefreshKey] = useState(0)
   const [showFriendRequests, setShowFriendRequests] = useState(false)
 
