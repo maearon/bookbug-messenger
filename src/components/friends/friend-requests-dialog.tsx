@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { Loader2, UserPlus, RefreshCw } from "lucide-react"
+import { Loader2, UserPlus, RefreshCw, UserCheck } from "lucide-react"
 
 interface FriendRequestWithSender {
   id: string
@@ -127,7 +127,7 @@ export function FriendRequestsDialog() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="ghost" size="icon" className="h-6 w-6">
-          <UserPlus className="h-4 w-4 text-gray-500" />
+          <UserCheck className="h-4 w-4 text-gray-500" />
         </Button>
       </DialogTrigger>
 
