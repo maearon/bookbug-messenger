@@ -6,7 +6,7 @@ import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ConversationList } from "@/components/chat/conversation-list"
-import { User, LogOut, Bell, Sun, Moon, Plus, MessageCircle, UserPlus, Loader2, Users } from "lucide-react"
+import { User, LogOut, Bell, Sun, Moon, Plus, MessageCircle, UserPlus, Loader2, Users, Twitter } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
@@ -117,7 +117,7 @@ const AppSidebar = ({
             onClick={() => window.open("https://ruby-rails-boilerplate.vercel.app", "_blank")}
             className="h-8 w-8 text-white hover:bg-white/20"
           >
-            <Users className="h-4 w-4" />
+            <Twitter className="h-4 w-4" />
           </Button>
 
           {/* Nút chuyển theme */}
@@ -148,6 +148,18 @@ const AppSidebar = ({
       <div className="px-4">
       <div className="mb-2 flex items-center justify-between">
           <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-500">NHÓM CHAT</h2>
+          {/* Add Friend Button */}
+          <div className="flex justify-end">
+          <Button variant="ghost" size="icon" className="h-6 w-6">
+          <Users className="h-4 w-4 text-gray-500" />
+          </Button>
+          </div>
+      </div>
+      </div>
+
+      <div className="px-4">
+      <div className="mb-2 flex items-center justify-between">
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-500">TÌM BẠN</h2>
           {/* <Button variant="ghost" size="icon" className="h-6 w-6">
           <Plus className="h-4 w-4 text-gray-500" />
           </Button> */}
@@ -160,7 +172,7 @@ const AppSidebar = ({
 
       <div className="px-4">
       <div className="mb-2 flex items-center justify-between">
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-500">BẠN BÈ</h2>
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-500">YÊU CẦU</h2>
           {/* <Button variant="ghost" size="icon" className="h-6 w-6" onClick={onShowFriendRequests}>
           <UserPlus className="h-4 w-4 text-gray-500" />
           </Button> */}
