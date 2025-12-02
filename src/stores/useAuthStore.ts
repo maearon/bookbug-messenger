@@ -75,11 +75,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   signOut: async () => {
     try {
       const refreshToken = get().refreshToken
-      get().clearState()
-
+      
       if (refreshToken) {
         await authService.signOut(refreshToken)
       }
+      get().clearState()
 
       toast.success("Logout thành công!")
     } catch (error) {
