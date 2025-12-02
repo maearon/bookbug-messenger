@@ -7,10 +7,8 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import { useChatStore } from './useChatStore';
 
 const CHAT_SERVICE_URL = process.env.NODE_ENV === "development"
-  ? "http://localhost:5005/api"
-  // : "https://adidas-microservices.onrender.com/api"
-  // : "https://spring-boilerplate.onrender.com/api"
-  : "https://node-boilerplate-pww8.onrender.com/v1"
+  ? "http://localhost:5001"
+  : "https://node-boilerplate-pww8.onrender.com"
 
 export const useSocketStore = create<SocketState>((set, get) => ({
   socket: null,
@@ -20,7 +18,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     const existingSocket = get().socket;
     if (existingSocket) return;
     const socket: Socket = io(CHAT_SERVICE_URL, {
-      auth: { token: accessToken },
+      query: { token: accessToken },
       transports: ['websocket', 'polling']
     })
     set({socket});
@@ -36,7 +34,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       set({ onlineUsers: userIds });
     })
     // new message
-    socket.on('new-message', (message, conversation, unreadCounts) => {
+    socket.on('new_message', (message, conversation, unreadCounts) => {
       useChatStore.getState().addMessage(message);
       const lastMessage = {
         _id: conversation.lastMessage._id,

@@ -60,7 +60,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     if (!user || !jwtToken) return;
 
     const socketInstance = io(process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:3002", {
-      auth: { token: jwtToken },
+      query: { token: jwtToken },
       transports: ["websocket", "polling"],
     });
 
