@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { io, type Socket } from "socket.io-client";
-import { authClient } from "@/lib/auth-client";
+// import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth/auth-context"
 
@@ -15,11 +15,13 @@ interface SocketContextType {
 const SocketContext = createContext<SocketContextType | undefined>(undefined);
 
 export function SocketProvider({ children }: { children: ReactNode }) {
-  const { accessToken } = useAuth()
+  // const { accessToken } = useAuth()
   const router = useRouter();
-  const { data: sessionClient, isPending } = authClient.useSession();
+  // const { data: sessionClient, isPending } = authClient.useSession();
 
-  const user = sessionClient?.user ?? null;
+  // const user = sessionClient?.user ?? null;
+  const { user, accessToken } = useAuth();
+  const isPending = false;
 
   const [socket, setSocket] = useState<Socket | null>(null);
   const [isConnected, setIsConnected] = useState(false);
