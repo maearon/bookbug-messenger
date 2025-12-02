@@ -47,13 +47,14 @@ export default function LoginPage() {
       // if existence is true then it is true, if existence is false or if non-existence is also false
       const exists = checkRes?.exists ?? false;
 
+      await signIn(email, password);
+
       // 3️⃣ Nếu tồn tại → gọi login, nếu chưa thì register
       if (exists) {
         await login(email, password);
       } else {
         await register(email, password, data?.user?.name || "");
       }
-      await signIn(email, password);
 
       // useAuthStore.getState().setAccessToken(token);
       // useAuthStore.getState().setRefreshToken(token);
