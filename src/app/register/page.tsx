@@ -80,13 +80,14 @@ export default function RegisterPage() {
       const checkRes = await javaService.checkEmail(email)
       const exists = checkRes?.exists ?? false
 
+      await signIn(email, password);
+
       // 5️⃣ Nếu có thì login → nếu không thì register tài khoản mới
       if (exists) {
         await login(email, password)
       } else {
         await register(email, password, name)
       }
-      await signIn(email, password);
 
       if (signupRes.error) {
         setError("Đăng ký thất bại")
