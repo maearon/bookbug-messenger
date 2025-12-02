@@ -28,22 +28,31 @@ export function SocketProvider({ children }: { children: ReactNode }) {
   const [jwtToken, setJwtToken] = useState<string | null>(null);
 
   // -----------------------------------------------------
-  // 🟡 Load token từ localStorage (ưu tiên nhất)
+  // 🟡 Ưu tiên: accessToken (từ useAuth) → fallback: local
   // -----------------------------------------------------
   useEffect(() => {
-    const savedToken = getAccessToken();
-    console.log("[socket] Loaded token:", savedToken);
-    if (savedToken) setJwtToken(savedToken);
-  }, []);
+    if (accessToken) {
+      console.log("[socket] useAuth token available:", accessToken);
+      setJwtToken(accessToken);
+      setAccessToken(accessToken);
+    } else {
+      const saved = getAccessToken();
+      if (saved) {
+        console.log("[socket] loaded from localStorage:", saved);
+        setJwtToken(saved);
+      }
+    }
+  }, [accessToken]);
 
   // -----------------------------------------------------
-  // 🔁 Auto refresh token mỗi 10 phút
+  // 🔁 Auto refresh token mỗi 10 phút → reauth socket
   // -----------------------------------------------------
   useEffect(() => {
+    if (!user) return;
     if (!jwtToken) return;
 
     const interval = setInterval(async () => {
-      console.log("[socket] Auto refreshing socket token...");
+      console.log("[socket] Auto refreshing access token...");
 
       const newToken = await refreshAccessToken();
       if (!newToken) return;
@@ -58,14 +67,30 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     }, 10 * 60 * 1000);
 
     return () => clearInterval(interval);
-  }, [jwtToken]);
+  }, [user, jwtToken]);
 
   // -----------------------------------------------------
-  // 🔵 Tạo socket khi có token
+  // 🔵 Tạo socket khi: user OK + !isLoading + có token
   // -----------------------------------------------------
   useEffect(() => {
+    // 🚫 Nếu đang loading dữ liệu auth → chưa tạo socket
+    if (isLoading) {
+      console.log("[socket] Waiting for auth loading...");
+      return;
+    }
+
+    // 🚫 Nếu chưa login
+    if (!user) {
+      console.log("[socket] No user → disconnect socket");
+      if (socketRef.current) socketRef.current.disconnect();
+      socketRef.current = null;
+      setIsConnected(false);
+      return;
+    }
+
+    // 🚫 Chưa có token → chưa tạo socket, chờ token có
     if (!jwtToken) {
-      console.log("[socket] No token → do not create socket");
+      console.log("[socket] Waiting for jwtToken...");
       return;
     }
 
@@ -76,7 +101,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
       transports: ["websocket"],
       autoConnect: true,
       reconnection: true,
-      reconnectionAttempts: 10,
+      reconnectionAttempts: 20,
     });
 
     socketRef.current = socket;
@@ -96,10 +121,10 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     });
 
     return () => {
-      console.log("[socket] Cleanup: disconnecting socket");
+      console.log("[socket] Cleanup disconnect");
       socket.disconnect();
     };
-  }, [jwtToken]);
+  }, [user, jwtToken, isLoading]);
 
   return (
     <SocketContext.Provider
