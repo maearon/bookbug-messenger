@@ -65,7 +65,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     });
 
     socketInstance.on("connect", () => {
-      console.log("[v0] Socket connected");
+      console.log(`[v0] Socket connected user id: ${user.id}, user email:${user.email}, socketid: ${socketInstance.id}`, user, socketInstance);
       setIsConnected(true);
     });
 
