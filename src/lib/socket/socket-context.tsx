@@ -104,7 +104,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     return () => {
       socketInstance.disconnect();
     };
-  }, [isPending, jwtToken, socket, user]);
+  }, [isPending, jwtToken, user]);
 
   return (
     <SocketContext.Provider value={{ socket, isConnected, jwtToken }}>
