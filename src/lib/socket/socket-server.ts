@@ -38,7 +38,7 @@ const onlineUsers = new Map<string, string>() // userId -> socketId
 
 io.on('connection', (socket) => {
   const userId = socket.data.userId
-  console.log(`User connected: ${userId}`)
+  console.log(`[src/socket/socket-server.ts] User connected: ${userId}`)
 
   // Handle user online
   socket.on('user:online', ({ userId }) => {
@@ -79,7 +79,7 @@ io.on('connection', (socket) => {
 
   // Handle disconnect
   socket.on('disconnect', () => {
-    console.log(`User disconnected: ${userId}`)
+    console.log(`[src/socket/socket-server.ts] User disconnected: ${userId}`)
     onlineUsers.delete(userId)
     // Broadcast to all friends
     socket.broadcast.emit('user:status', { userId, isOnline: false })
