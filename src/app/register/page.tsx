@@ -11,8 +11,11 @@ import { Label } from "@/components/ui/label"
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useAuth } from "@/lib/auth/auth-context";
 import javaService from "@/api/services/javaService"
+import { Eye, EyeOff } from "lucide-react";
+import { useTranslations } from "@/hooks/useTranslations";
 
 export default function RegisterPage() {
+  const t = useTranslations("auth");
   const { signUp, signIn } = useAuthStore();
   const { login, register } = useAuth()
   const [formData, setFormData] = useState({
@@ -24,6 +27,8 @@ export default function RegisterPage() {
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -166,32 +171,70 @@ export default function RegisterPage() {
                 <Label htmlFor="password" className="text-gray-700">
                   Mật khẩu
                 </Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                  disabled={isLoading}
-                  className="h-12 rounded-xl border-gray-200 bg-gray-50 px-4 focus:border-purple-500 focus:ring-purple-500"
-                />
+
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                    disabled={isLoading}
+                    className="h-12 rounded-xl border-gray-200 bg-gray-50 px-4 focus:border-purple-500 focus:ring-purple-500"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-4 text-gray-600 text-xs"
+                  >
+                    {showPassword ? (
+                      <>
+                        <EyeOff className="inline-block w-4 h-4 mr-1" /> {t?.hide || "HIDE"}
+                      </>
+                    ) : (
+                      <>
+                        <Eye className="inline-block w-4 h-4 mr-1" /> {t?.show || "SHOW"}
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="confirmPassword" className="text-gray-700">
                   Xác nhận mật khẩu
                 </Label>
-                <Input
-                  id="confirmPassword"
-                  type="password"
-                  placeholder="••••••••"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  required
-                  disabled={isLoading}
-                  className="h-12 rounded-xl border-gray-200 bg-gray-50 px-4 focus:border-purple-500 focus:ring-purple-500"
-                />
+
+                <div className="relative">
+                  <Input
+                    id="confirmPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    required
+                    disabled={isLoading}
+                    className="h-12 rounded-xl border-gray-200 bg-gray-50 px-4 focus:border-purple-500 focus:ring-purple-500"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-4 text-gray-600 text-xs"
+                  >
+                    {showConfirmPassword ? (
+                      <>
+                        <EyeOff className="inline-block w-4 h-4 mr-1" /> {t?.hide || "HIDE"}
+                      </>
+                    ) : (
+                      <>
+                        <Eye className="inline-block w-4 h-4 mr-1" /> {t?.show || "SHOW"}
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
 
               <Button

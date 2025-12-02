@@ -11,8 +11,11 @@ import { Label } from "@/components/ui/label"
 import { useAuth } from "@/lib/auth/auth-context";
 import javaService from "@/api/services/javaService"
 import { useAuthStore } from "@/stores/useAuthStore";
+import { Eye, EyeOff } from "lucide-react";
+import { useTranslations } from "@/hooks/useTranslations";
 
 export default function LoginPage() {
+  const t = useTranslations("auth");
   const { signIn } = useAuthStore();
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -20,6 +23,7 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
   const { login, register } = useAuth()
+  const [showPassword, setShowPassword] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -108,23 +112,41 @@ export default function LoginPage() {
 
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="password" className="text-gray-700">
-                    Mật khẩu
-                  </Label>
+                  <Label htmlFor="password">Mật khẩu</Label>
                   <Link href="/forgot-password" className="text-sm text-purple-600 hover:text-purple-700">
                     Quên mật khẩu?
                   </Link>
                 </div>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  disabled={isLoading}
-                  className="h-12 rounded-xl border-gray-200 bg-gray-50 px-4 focus:border-purple-500 focus:ring-purple-500"
-                />
+
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    disabled={isLoading}
+                    className="h-12 rounded-xl border-gray-200 bg-gray-50 px-4 pr-12 
+                              focus:border-purple-500 focus:ring-purple-500"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-4 text-gray-600 text-xs"
+                  >
+                    {showPassword ? (
+                      <>
+                        <EyeOff className="inline-block w-4 h-4 mr-1" /> {t?.hide || "HIDE"}
+                      </>
+                    ) : (
+                      <>
+                        <Eye className="inline-block w-4 h-4 mr-1" /> {t?.show || "SHOW"}
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
 
               <Button

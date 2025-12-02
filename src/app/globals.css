@@ -157,3 +157,29 @@
   background: #475569; /* slate-600 */
 }
 
+/* Fix auto fill background for input in Chrome browser */
+/* Light mode autofill */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px #f9fafb inset !important; /* nền light */
+  box-shadow: 0 0 0px 1000px #f9fafb inset !important;
+  -webkit-text-fill-color: #111 !important; /* chữ đen rõ */
+  caret-color: #111 !important;
+}
+
+/* Dark mode autofill */
+:root.dark input:-webkit-autofill,
+:root.dark input:-webkit-autofill:hover,
+:root.dark input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px #f9fafb inset !important; /* nền light */
+  box-shadow: 0 0 0px 1000px #f9fafb inset !important;
+  -webkit-text-fill-color: #111 !important; /* chữ đen rõ */
+  caret-color: #111 !important;
+}
+/* {
+  -webkit-box-shadow: 0 0 0px 1000px #1f2937 inset !important; nền dark
+  box-shadow: 0 0 0px 1000px #1f2937 inset !important;
+  -webkit-text-fill-color: #f1f5f9 !important; slate-100
+  caret-color: #f1f5f9 !important;
+} */
