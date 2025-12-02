@@ -74,19 +74,19 @@ export function SocketProvider({ children }: { children: ReactNode }) {
   // -----------------------------------------------------
   useEffect(() => {
     // 🚫 Nếu đang loading dữ liệu auth → chưa tạo socket
-    if (isLoading) {
-      console.log("[socket] Waiting for auth loading...");
-      return;
-    }
+    // if (isLoading) {
+    //   console.log("[socket] Waiting for auth loading...");
+    //   return;
+    // }
 
     // 🚫 Nếu chưa login
-    if (!user) {
-      console.log("[socket] No user → disconnect socket");
-      if (socketRef.current) socketRef.current.disconnect();
-      socketRef.current = null;
-      setIsConnected(false);
-      return;
-    }
+    // if (!user) {
+    //   console.log("[socket] No user → disconnect socket");
+    //   if (socketRef.current) socketRef.current.disconnect();
+    //   socketRef.current = null;
+    //   setIsConnected(false);
+    //   return;
+    // }
 
     // 🚫 Chưa có token → chưa tạo socket, chờ token có
     if (!jwtToken) {
