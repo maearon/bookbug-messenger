@@ -70,7 +70,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     });
 
     socketInstance.on("disconnect", () => {
-      console.log("[v0] Socket disconnected");
+      console.log(`[v0] Socket disconnected user id: ${user.id}, user email:${user.email}, socketid: ${socketInstance.id}`, user, socketInstance);
       setIsConnected(false);
     });
 
