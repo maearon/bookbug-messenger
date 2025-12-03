@@ -110,7 +110,14 @@ export default function LoginPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   disabled={isLoading}
-                  className="h-12 rounded-xl border-gray-200 bg-white px-4 focus:border-purple-500 focus:ring-purple-500"
+                  className="
+    h-12 rounded-xl 
+    border border-gray-200 
+    bg-white 
+    px-4 
+    appearance-none 
+    autofill:!text-black
+  "
                 />
               </div>
 
@@ -131,8 +138,14 @@ export default function LoginPage() {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     disabled={isLoading}
-                    className="h-12 rounded-xl border-gray-200 bg-white px-4 pr-12 
-                              focus:border-purple-500 focus:ring-purple-500"
+                    className="
+    h-12 rounded-xl 
+    border border-gray-200 
+    bg-white 
+    px-4 
+    appearance-none 
+    autofill:!text-black
+  "
                   />
 
                   <button

@@ -157,12 +157,13 @@
   background: #475569; /* slate-600 */
 }
 
-/* ===== FIX AUTOFILL iPhone Safari/Chrome ===== */
-
-/* Nền trắng + chữ đen trong mọi mode */
-input:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0px 1000px white inset !important;
-  background-color: white !important;
+/* REAL iOS SAFARI AUTOFILL FIX */
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
   -webkit-text-fill-color: #000 !important;
+  caret-color: #000 !important;
 }
 
+.autofill\:!text-black:-webkit-autofill {
+  -webkit-text-fill-color: #000 !important;
+}

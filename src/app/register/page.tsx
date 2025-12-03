@@ -148,7 +148,14 @@ export default function RegisterPage() {
                   onChange={handleChange}
                   required
                   disabled={isLoading}
-                  className="h-12 rounded-xl border-gray-200 bg-white px-4 focus:border-purple-500 focus:ring-purple-500"
+                  className="
+    h-12 rounded-xl 
+    border border-gray-200 
+    bg-white 
+    px-4 
+    appearance-none 
+    autofill:!text-black
+  "
                 />
               </div>
 
@@ -164,7 +171,14 @@ export default function RegisterPage() {
                   onChange={handleChange}
                   required
                   disabled={isLoading}
-                  className="h-12 rounded-xl border-gray-200 bg-white px-4 focus:border-purple-500 focus:ring-purple-500"
+                  className="
+    h-12 rounded-xl 
+    border border-gray-200 
+    bg-white 
+    px-4 
+    appearance-none 
+    autofill:!text-black
+  "
                 />
               </div>
 
@@ -182,7 +196,14 @@ export default function RegisterPage() {
                     onChange={handleChange}
                     required
                     disabled={isLoading}
-                    className="h-12 rounded-xl border-gray-200 bg-white px-4 focus:border-purple-500 focus:ring-purple-500"
+                    className="
+    h-12 rounded-xl 
+    border border-gray-200 
+    bg-white 
+    px-4 
+    appearance-none 
+    autofill:!text-black
+  "
                   />
 
                   <button
@@ -217,7 +238,14 @@ export default function RegisterPage() {
                     onChange={handleChange}
                     required
                     disabled={isLoading}
-                    className="h-12 rounded-xl border-gray-200 bg-white px-4 focus:border-purple-500 focus:ring-purple-500"
+                    className="
+    h-12 rounded-xl 
+    border border-gray-200 
+    bg-white 
+    px-4 
+    appearance-none 
+    autofill:!text-black
+  "
                   />
 
                   <button
