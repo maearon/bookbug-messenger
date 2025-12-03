@@ -14,7 +14,7 @@ export default function HomePage() {
 
   useEffect(() => {
     if (!isLoading && user) {
-      router.push("/chat")
+      router.push(`/e2ee/t/${user?.id ?? "YnhAyaqjpK7Z7SCs0FWO1M2CuhSBhD1h"}`)
     }
   }, [user, isLoading, router])
 
