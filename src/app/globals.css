@@ -157,21 +157,12 @@
   background: #475569; /* slate-600 */
 }
 
-/* Fix auto fill background for input in Chrome browser */
-/* ========================================
-   FIX AUTOFILL CHROME + SAFARI ON iOS
-   ======================================== */
-input:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0 1000px #fff inset !important;
-  background-color: #fff !important;
-  -webkit-text-fill-color: #111 !important;
-}
+/* ===== FIX AUTOFILL iPhone Safari/Chrome ===== */
 
-.dark input:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0 1000px #fff inset !important;
-  background-color: #fff !important; 
-  /* #1a1a1a */
-  -webkit-text-fill-color: #111 !important;
-  /* #f1f5f9 */
+/* Nền trắng + chữ đen trong mọi mode */
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+  background-color: white !important;
+  -webkit-text-fill-color: #000 !important;
 }
 
