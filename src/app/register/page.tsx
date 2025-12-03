@@ -202,7 +202,7 @@ export default function RegisterPage() {
     bg-white 
     px-4 
     appearance-none 
-    autofill:!text-black pr-14
+    autofill:!text-black pr-28
   "
                   />
 
@@ -244,7 +244,7 @@ export default function RegisterPage() {
     bg-white 
     px-4 
     appearance-none 
-    autofill:!text-black pr-14
+    autofill:!text-black pr-28
   "
                   />
 
