@@ -12,19 +12,19 @@ export default function HomePage() {
   const { user, isLoading } = useAuth()
   const router = useRouter()
 
-  useEffect(() => {
-    if (!isLoading && user) {
-      router.push(`/e2ee/t/${user?.id ?? "YnhAyaqjpK7Z7SCs0FWO1M2CuhSBhD1h"}`)
-    }
-  }, [user, isLoading, router])
+  // useEffect(() => {
+  //   if (!isLoading && user) {
+  //     router.push(`/e2ee/t/${user?.id ?? "YnhAyaqjpK7Z7SCs0FWO1M2CuhSBhD1h"}`)
+  //   }
+  // }, [user, isLoading, router])
 
-  if (isLoading) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-purple-600 border-t-transparent" />
-      </div>
-    )
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div className="flex h-screen items-center justify-center">
+  //       <div className="h-8 w-8 animate-spin rounded-full border-4 border-purple-600 border-t-transparent" />
+  //     </div>
+  //   )
+  // }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-100 via-purple-50 to-pink-50">
