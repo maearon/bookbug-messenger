@@ -144,7 +144,7 @@ export default function LoginPage() {
     bg-white 
     px-4 
     appearance-none 
-    autofill:!text-black
+    autofill:!text-black pr-14
   "
                   />
 
