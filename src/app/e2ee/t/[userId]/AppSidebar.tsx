@@ -89,7 +89,7 @@ const AppSidebar = ({
       },
     });
     logout();
-    router.push("/login")
+    // router.push("/login")
   }
 
   return (
