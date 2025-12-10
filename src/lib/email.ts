@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+
 interface SendEmailValues {
   to: string;
   subject: string;
@@ -7,13 +8,11 @@ interface SendEmailValues {
 
 function createTransporter() {
   return nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
+    service: "gmail",
     auth: {
-      user: "manhng132@gmail.com",
-      pass: "rqisoolrehrwayum",
+      user: process.env.SMTP_USERNAME!,
+      pass: process.env.SMTP_PASSWORD!,
     },
-    from: "manhng132@gmail.com",
   });
 }
 
@@ -26,10 +25,15 @@ export async function sendEmail({ to, subject, text }: SendEmailValues) {
   //   throw new Error("Smtp Password Key not configured");
   // }
 
-  const transporter = createTransporter();
+  // git checkout 1242dc57c527178d6bffd6980c884ba4478bafd4 -- config/environments/development.rb
+  // https://myaccount.google.com/lesssecureapps
+  // https://accounts.google.com/DisplayUnlockCaptcha
+  // https://support.google.com/mail/answer/185833?hl=en
   
+  const transporter = createTransporter();
+
   await transporter.sendMail({
-    from: process.env.SMTP_USERNAME,
+    from: process.env.SMTP_USERNAME!,
     to,
     subject,
     text,
