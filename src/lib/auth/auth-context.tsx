@@ -27,8 +27,8 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
-  const [accessToken, setAccessTokenState] = useState<string | null>(null)
-  const [refreshToken, setRefreshTokenState] = useState<string | null>(null)
+  const [accessToken, setAccessTokenState] = useState<string | null>(getAccessToken())
+  const [refreshToken, setRefreshTokenState] = useState<string | null>(getRefreshToken())
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
