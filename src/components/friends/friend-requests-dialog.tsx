@@ -98,6 +98,7 @@ export function FriendRequestsDialog() {
           id: r.from?.id || "",
           name: r.from?.name || "Unknown",
           username: r.from?.username || "unknown",
+          email: r.from?.email || "unknown",
           avatar: r.from?.avatar,
         },
         createdAt: r.createdAt,
