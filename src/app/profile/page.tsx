@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { ProfileEditDialog } from "@/components/profile/profile-edit-dialog"
 import { FriendList } from "@/components/friends/friend-list"
 import { FriendRequests } from "@/components/friends/friend-requests"
-import { AddFriendDialog } from "@/components/friends/add-friend-dialog"
+
 import { Button } from "@/components/ui/button"
 import { ArrowLeft, CheckCircle2, MailIcon } from "lucide-react"
 import { ProtectedRoute } from "@/components/auth/protected-route"
@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { useAuthStore } from "@/stores/useAuthStore"
 import { useAuth } from "@/lib/auth/auth-context"
+import { FriendSuggestionsDialog } from "@/components/friends/friend-suggestions-dialog"
 
 export default function ProfilePage() {
   return (
@@ -79,7 +80,7 @@ function ProfileContent() {
 
           {/* Add Friend Button */}
           <div className="flex justify-end">
-            <AddFriendDialog forProfilePage />
+            <FriendSuggestionsDialog forProfilePage />
           </div>
 
           {/* Friend Requests */}

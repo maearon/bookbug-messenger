@@ -12,7 +12,6 @@ import { useRouter } from "next/navigation"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Session } from "@/lib/auth"
 import { useAuth } from "@/lib/auth/auth-context";
-import { AddFriendDialog } from "@/components/friends/add-friend-dialog";
 import { useTheme } from "next-themes";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupAction, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
@@ -26,6 +25,7 @@ import AddFriendModal from "@/components/chat/AddFriendModal";
 import DirectMessageList from "@/components/chat/DirectMessageList";
 import { useChatStore } from "@/stores/useChatStore";
 import NewDirectChatDialog from "@/components/chat/NewDirectChatDialog";
+import { FriendSuggestionsDialog } from "@/components/friends/friend-suggestions-dialog";
 
 type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
   session: Session | null
@@ -135,7 +135,7 @@ const AppSidebar = ({
           People you may know
         </SidebarGroupLabel>
         <SidebarGroupAction title="People you may know" className="cursor-pointer">
-          <AddFriendDialog />
+          <FriendSuggestionsDialog />
         </SidebarGroupAction>
       </SidebarGroup>
       {/* Direct Message */}

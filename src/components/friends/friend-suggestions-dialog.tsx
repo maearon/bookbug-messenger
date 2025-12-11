@@ -148,7 +148,7 @@ export function FriendSuggestionsDialog({ forProfilePage = false }: AddFriendDia
           <UserPlus className="mr-2 h-4 w-4" />
           Friend Suggestions
         </Button>
-        )};
+        )}
       </DialogTrigger>
 
       <DialogContent className="max-w-md rounded-2xl p-0">
