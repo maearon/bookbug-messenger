@@ -1,13 +1,5 @@
-import axios, { AxiosResponse, InternalAxiosRequestConfig } from "axios"
-import {
-  getAccessToken,
-  getRefreshToken,
-  setTokens,
-  clearTokens,
-} from "@/lib/token"
-import { useAuthStore } from "@/stores/useAuthStore"
-
-// =============== BASE CONFIG =============== //
+import { useAuthStore } from "@/stores/useAuthStore";
+import axios from "axios";
 
 const BASE_URL =
   process.env.NODE_ENV === "development"
@@ -17,144 +9,63 @@ const BASE_URL =
 axios.defaults.withCredentials = true
 
 const api = axios.create({
-  baseURL: BASE_URL,
-  headers: {
-    "Content-Type": "application/json",
-    Accept: "application/json",
-    "x-lang": "EN",
-  },
-})
+  baseURL:
+    BASE_URL,
+  withCredentials: true,
+});
 
-// =============== REQUEST INTERCEPTOR =============== //
+// gắn access token vào req header
+api.interceptors.request.use((config) => {
+  const { accessToken } = useAuthStore.getState();
 
-api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  const token = getAccessToken()
-
-  if (token && config.headers) {
-    config.headers.Authorization = `Bearer ${token}`
+  if (accessToken) {
+    config.headers.Authorization = `Bearer ${accessToken}`;
   }
 
-  return config
-})
+  return config;
+});
 
-// =============== REFRESH TOKEN HANDLER =============== //
-
-let isRefreshing = false
-let failedQueue: {
-  resolve: (token: string) => void
-  reject: (err: unknown) => void
-}[] = []
-
-const processQueue = (error: unknown, token: string | null) => {
-  failedQueue.forEach((p) => {
-    if (error) p.reject(error)
-    else p.resolve(token!)
-  })
-  failedQueue = []
-}
-
-// =============== RESPONSE INTERCEPTOR =============== //
-
+// tự động gọi refresh api khi access token hết hạn
 api.interceptors.response.use(
-  (res: AxiosResponse) => res,
-
+  (res) => res,
   async (error) => {
-    const original = error.config as InternalAxiosRequestConfig | undefined
+    const originalRequest = error.config;
 
-    // if no original config, just reject
-    if (!original) return Promise.reject(error)
-
-    const originalUrl = String(original.url || "")
-
-    // Bỏ qua login/register/refresh
+    // những api không cần check
     if (
-      originalUrl.includes("/auth/login") ||
-      originalUrl.includes("/auth/register") ||
-      originalUrl.includes("/auth/refresh-tokens")
+      originalRequest.url.includes("/auth/login") ||
+      originalRequest.url.includes("/auth/register") ||
+      originalRequest.url.includes("/auth/refresh-tokens")
     ) {
-      return Promise.reject(error)
+      return Promise.reject(error);
     }
 
-    // 401 hoặc 403 → refresh
-    if ((error.response?.status === 401 || error.response?.status === 403) && !original._retry) {
-      original._retry = true
+    originalRequest._retryCount = originalRequest._retryCount || 0;
 
-      // Nếu đang refresh → queue
-      if (isRefreshing) {
-        return new Promise((resolve, reject) => {
-          failedQueue.push({
-            resolve: (token: string) => {
-              if (!original.headers) original.headers = {}
-              original.headers.Authorization = `Bearer ${token}`
-              resolve(api(original))
-            },
-            reject,
-          })
-        })
-      }
-
-      isRefreshing = true
+    if (error.response?.status === 403 && originalRequest._retryCount < 4) {
+      originalRequest._retryCount += 1;
 
       try {
-        const refreshToken = getRefreshToken()
-
-        if (!refreshToken) {
-          // no refresh token -> clear state everywhere
-          clearTokens()
-          try { useAuthStore.getState().clearState() } catch (_) {}
-          // notify other parts (AuthContext) to logout
-          window.dispatchEvent(new CustomEvent("auth:logged_out"))
-          return Promise.reject(error)
-        }
-
-        // Use axios (not api) to call refresh (avoid interceptor loop)
-        const res = await axios.post(`${BASE_URL}/auth/refresh-tokens`, {
+        const { refreshToken } = useAuthStore.getState();
+        const res = await axios.post(`${BASE_URL}/v1/auth/refresh-tokens`, {
           refreshToken,
         })
+        const newAccessToken = res.data?.tokens?.access?.token;
+        const newRefreshToken = res.data?.tokens?.refresh?.token;
 
-        const newAccess = res.data?.tokens?.access?.token
-        const newRefresh = res.data?.tokens?.refresh?.token
+        useAuthStore.getState().setAccessToken(newAccessToken);
+        useAuthStore.getState().setRefreshToken(newRefreshToken);
 
-        if (!newAccess) {
-          throw new Error("Refresh returned no access token")
-        }
-
-        // Lưu lại token → lib token
-        setTokens(newAccess, newRefresh, true)
-
-        // Cập nhật Zustand → UI sync
-        try {
-          useAuthStore.getState().setAccessToken(newAccess)
-          useAuthStore.getState().setRefreshToken(newRefresh)
-        } catch (_) {}
-
-        // update default header for future requests
-        api.defaults.headers.Authorization = `Bearer ${newAccess}`
-
-        // Inform other parts of the app (AuthContext, SocketProvider) that tokens updated
-        window.dispatchEvent(new CustomEvent("auth:tokens_updated", {
-          detail: { accessToken: newAccess, refreshToken: newRefresh }
-        }))
-
-        processQueue(null, newAccess)
-
-        if (!original.headers) original.headers = {}
-        original.headers.Authorization = `Bearer ${newAccess}`
-        return api(original)
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
+        return api(originalRequest);
       } catch (refreshError) {
-        processQueue(refreshError, null)
-        clearTokens()
-        try { useAuthStore.getState().clearState() } catch (_) {}
-        // notify other parts to logout/clear state
-        window.dispatchEvent(new CustomEvent("auth:logged_out"))
-        return Promise.reject(refreshError)
-      } finally {
-        isRefreshing = false
+        useAuthStore.getState().clearState();
+        return Promise.reject(refreshError);
       }
     }
 
-    return Promise.reject(error)
-  },
-)
+    return Promise.reject(error);
+  }
+);
 
-export default api
+export default api;
