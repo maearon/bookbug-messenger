@@ -6,7 +6,7 @@ import { BaseButton } from "@/components/ui/base-button"
 import { Input } from "@/components/ui/input"
 import { io, Socket } from "socket.io-client"
 import { getUiAvatarUrl } from "@/utils/ui-avatar"
-import { useCurrentUser } from "@/api/hooks/useCurrentUser";
+// import { useCurrentUser } from "@/api/hooks/useCurrentUser";
 import { playSound } from "@/utils/play-sound"
 import Image from "next/image"
 import { type Session } from "@/lib/auth"
@@ -17,6 +17,7 @@ import { setTokens } from "@/lib/token"
 // import { generateJWT } from "@/lib/jwtJoseForClient"
 import axiosInstance from "@/lib/axios"
 import { useAuth } from "@/lib/auth/auth-context"
+import { useAuthStore } from "@/stores/useAuthStore"
 
 interface ChatMessage {
   content: string
@@ -40,7 +41,8 @@ interface ChatWidgetClientProps {
 }
 
 export default function ChatWidgetClient({ session }: ChatWidgetClientProps) {
-  const { data: userData, status } = useCurrentUser();
+  const { user: userData  } = useAuthStore();
+  // const { data: userData, status } = useCurrentUser();
   const t = useTranslations("chat");
   const [isOpen, setIsOpen] = useState(false)
   const [isMinimized, setIsMinimized] = useState(false)
@@ -168,7 +170,7 @@ export default function ChatWidgetClient({ session }: ChatWidgetClientProps) {
           updated_at: msg.updated_at ? new Date(msg.updated_at) : new Date(),
           user_id: msg.user_id,
           users: msg.users ?? {
-            email: userData.email,
+            email: userData?.email || "manhng132@gmail.com",
             name: userName,
             id: msg.user_id ?? null,
           },
