@@ -29,10 +29,10 @@ export default function RootLayout({
   useEffect(() => {
     if (accessToken) {
       connectSocket();
+    } else {
+      disconnectSocket();
     }
-
-    return () => disconnectSocket();
-  }, [accessToken]);
+  }, [accessToken, connectSocket, disconnectSocket]);
 
   return (
     <html lang="en" suppressHydrationWarning>
