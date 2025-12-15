@@ -15,7 +15,10 @@ export const useChatStore = create<ChatState>()(
       messageLoading: false,
       loading: false,
 
-      setActiveConversation: (id) => set({ activeConversationId: id }),
+      setActiveConversation: (id) => set({ 
+        activeConversationId: id, 
+        // messageLoading: false
+      }),
       reset: () => {
         set({
           conversations: [],
