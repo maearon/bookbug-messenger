@@ -1,3 +1,5 @@
+"use client"
+
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import {
   Dialog,

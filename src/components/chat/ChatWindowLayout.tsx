@@ -1,3 +1,5 @@
+"use client"
+
 import { useChatStore } from "@/stores/useChatStore";
 import ChatWelcomeScreen from "./ChatWelcomeScreen";
 import ChatWindowSkeleton from "./ChatWindowSkeleton";

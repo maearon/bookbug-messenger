@@ -1,3 +1,5 @@
+"use client"
+
 import { useAuthStore } from "@/stores/useAuthStore";
 import type { Conversation } from "@/types/chat";
 import { useState } from "react";
