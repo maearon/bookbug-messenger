@@ -1,6 +1,6 @@
 import type { FriendRequest } from "@/types/user";
 import type { ReactNode } from "react";
-import UserAvatar from "../chat-old/UserAvatar";
+import UserAvatar from "../chat/UserAvatar";
 
 interface RequestItemProps {
   requestInfo: FriendRequest;
