@@ -10,6 +10,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Label } from "../ui/label";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useRouter } from "next/navigation"
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
+import { useTranslations } from "@/hooks/useTranslations";
+import Link from "next/link";
+import Image from "next/image";
 
 const signInSchema = z.object({
   username: z.string().min(3, "Tên đăng nhập phải có ít nhất 3 ký tự"),
@@ -19,8 +24,10 @@ const signInSchema = z.object({
 type SignInFormValues = z.infer<typeof signInSchema>;
 
 export function SigninForm({ className, ...props }: React.ComponentProps<"div">) {
+  const t = useTranslations("auth");
   const { signIn } = useAuthStore();
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false)
   const {
     register,
     handleSubmit,
@@ -49,15 +56,18 @@ export function SigninForm({ className, ...props }: React.ComponentProps<"div">)
             <div className="flex flex-col gap-6">
               {/* header - logo */}
               <div className="flex flex-col items-center text-center gap-2">
-                <a
+                <Link
                   href="/"
                   className="mx-auto block w-fit text-center"
                 >
-                  <img
+                  <Image
                     src="/logo.svg"
                     alt="logo"
+                    width={51}
+                    height={40}
+                    unoptimized
                   />
-                </a>
+                </Link>
 
                 <h1 className="text-2xl font-bold">Chào mừng quay lại</h1>
                 <p className="text-muted-foreground text-balance">
@@ -94,11 +104,29 @@ export function SigninForm({ className, ...props }: React.ComponentProps<"div">)
                 >
                   Mật khẩu
                 </Label>
+                <div className="relative">
                 <Input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   id="password"
                   {...register("password")}
+                  className="pr-20"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-2 text-muted-foreground text-xs"
+                >
+                  {showPassword ? (
+                    <>
+                      <EyeOff className="inline-block w-4 h-4 mr-1" /> {t?.hide || "HIDE"}
+                    </>
+                  ) : (
+                    <>
+                      <Eye className="inline-block w-4 h-4 mr-1" /> {t?.show || "SHOW"}
+                    </>
+                  )}
+                </button>
+                </div>
                 {errors.password && (
                   <p className="text-destructive text-sm">
                     {errors.password.message}
@@ -127,10 +155,12 @@ export function SigninForm({ className, ...props }: React.ComponentProps<"div">)
             </div>
           </form>
           <div className="bg-muted relative hidden md:block">
-            <img
-              src="/placeholder.png"
+            <Image
+              src="/modern-login-illustration-with-people-and-mobile-app.jpg"
               alt="Image"
-              className="absolute top-1/2 -translate-y-1/2 object-cover"
+              className="object-cover"
+              fill
+              priority
             />
           </div>
         </CardContent>

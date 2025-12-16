@@ -10,6 +10,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Label } from "../ui/label";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useRouter } from "next/navigation"
+import { Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
+import { useTranslations } from "@/hooks/useTranslations";
+import Link from "next/link";
+import Image from "next/image";
 
 const signUpSchema = z.object({
   firstname: z.string().min(1, "Tên bắt buộc phải có"),
@@ -22,8 +27,10 @@ const signUpSchema = z.object({
 type SignUpFormValues = z.infer<typeof signUpSchema>;
 
 export function SignupForm({ className, ...props }: React.ComponentProps<"div">) {
+  const t = useTranslations("auth");
   const { signUp } = useAuthStore();
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false)
   const {
     register,
     handleSubmit,
@@ -55,15 +62,18 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
             <div className="flex flex-col gap-6">
               {/* header - logo */}
               <div className="flex flex-col items-center text-center gap-2">
-                <a
+                <Link
                   href="/"
                   className="mx-auto block w-fit text-center"
                 >
-                  <img
+                  <Image
                     src="/logo.svg"
                     alt="logo"
+                    width={51}
+                    height={40}
+                    unoptimized
                   />
-                </a>
+                </Link>
 
                 <h1 className="text-2xl font-bold">Tạo tài khoản Moji</h1>
                 <p className="text-muted-foreground text-balance">
@@ -154,11 +164,29 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
                 >
                   Mật khẩu
                 </Label>
+                <div className="relative">
                 <Input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   id="password"
                   {...register("password")}
+                  className="pr-20"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-2 text-muted-foreground text-xs"
+                >
+                  {showPassword ? (
+                    <>
+                      <EyeOff className="inline-block w-4 h-4 mr-1" /> {t?.hide || "HIDE"}
+                    </>
+                  ) : (
+                    <>
+                      <Eye className="inline-block w-4 h-4 mr-1" /> {t?.show || "SHOW"}
+                    </>
+                  )}
+                </button>
+                </div>
                 {errors.password && (
                   <p className="error-message">{errors.password.message}</p>
                 )}
@@ -185,10 +213,12 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
             </div>
           </form>
           <div className="bg-muted relative hidden md:block">
-            <img
-              src="/placeholderSignUp.png"
+            <Image
+              src="/placeholder.png"
               alt="Image"
-              className="absolute top-1/2 -translate-y-1/2 object-cover"
+              className="object-contain"
+              fill
+              priority
             />
           </div>
         </CardContent>
