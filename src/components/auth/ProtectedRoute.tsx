@@ -3,6 +3,7 @@
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import PromoScreen from "./PromoScreen";
 
 export default function ProtectedRoute({
   children,
@@ -40,7 +41,8 @@ export default function ProtectedRoute({
   if (starting || loading) {
     return (
       <div className="flex h-screen items-center justify-center">
-        Đang tải trang...
+        {/* Đang tải trang... */}
+        <PromoScreen />
       </div>
     );
   }
