@@ -24,6 +24,7 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import { Button } from "../ui/button";
 import { useTheme } from "next-themes";
 import { useEffect } from "react";
+import Link from "next/link";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { isDark, setTheme: setZustandTheme } = useThemeStore();
@@ -57,24 +58,24 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="bg-gradient-primary"
             >
-              <a href="#">
+              <Link href="/">
                 <div className="flex w-full items-center px-2 justify-between">
                   <h1 className="text-xl font-bold text-white">Moji</h1>
                   <div className="flex items-center gap-2">
-                    <Button
+                    <Button variant="ghost" size="icon" onClick={toggleTheme} className="h-8 w-8 text-white hover:bg-white/20">
+                      {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                    </Button>
+                    {/* <Button
                       variant="ghost"
                       size="icon"
                       onClick={() => window.open("https://ruby-rails-boilerplate.vercel.app", "_blank")}
                       className="h-8 w-8 text-white hover:bg-white/20"
                     >
                       <Twitter className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="icon" onClick={toggleTheme} className="h-8 w-8 text-white hover:bg-white/20">
-                      {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-                    </Button>
+                    </Button> */}
                   </div>
                 </div>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
