@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Label } from "../ui/label";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { useRouter } from "next/navigation"
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useTranslations } from "@/hooks/useTranslations";
@@ -27,46 +27,48 @@ export function SigninForm({ className, ...props }: React.ComponentProps<"div">)
   const t = useTranslations("auth");
   const { signIn } = useAuthStore();
   const router = useRouter();
-  const [showPassword, setShowPassword] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
+
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<SignInFormValues>({
     resolver: zodResolver(signInSchema),
   });
 
   const onSubmit = async (data: SignInFormValues) => {
-    const { username, password } = data;
-    await signIn(username, password);
-    router.push("/");
+    try {
+      const { username, password } = data;
+
+      await signIn(username, password);
+
+      // ✅ CHỈ redirect khi login thành công
+      router.push("/");
+    } catch (err: any) {
+      /**
+       * Backend thường trả:
+       * { message: "Sai tên đăng nhập hoặc mật khẩu" }
+       * hoặc store throw new Error(message)
+       */
+      setError("root", {
+        type: "server",
+        message: err?.message || "Đăng nhập thất bại",
+      });
+    }
   };
 
   return (
-    <div
-      className={cn("flex flex-col gap-6", className)}
-      {...props}
-    >
+    <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden p-0 border-border">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form
-            className="p-6 md:p-8"
-            onSubmit={handleSubmit(onSubmit)}
-          >
+          <form className="p-6 md:p-8" onSubmit={handleSubmit(onSubmit)}>
             <div className="flex flex-col gap-6">
-              {/* header - logo */}
+
+              {/* header */}
               <div className="flex flex-col items-center text-center gap-2">
-                <Link
-                  href="/"
-                  className="mx-auto block w-fit text-center"
-                >
-                  {/* <Image
-                    src="/favicon.ico"
-                    alt="logo"
-                    width={51}
-                    height={40}
-                    unoptimized
-                  /> */}
+                <Link href="/" className="mx-auto block w-fit text-center">
                   <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 to-fuchsia-500">
                     <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path
@@ -80,21 +82,22 @@ export function SigninForm({ className, ...props }: React.ComponentProps<"div">)
                 </Link>
 
                 <h1 className="text-2xl font-bold">Chào mừng quay lại</h1>
-                <p className="text-muted-foreground text-balance">
+                <p className="text-muted-foreground">
                   Đăng nhập vào tài khoản Moji của bạn
                 </p>
               </div>
 
+              {/* 🔴 ERROR API (GLOBAL) */}
+              {errors.root && (
+                <p className="text-sm text-red-500 text-center">
+                  {errors.root.message}
+                </p>
+              )}
+
               {/* username */}
               <div className="flex flex-col gap-3">
-                <Label
-                  htmlFor="username"
-                  className="block text-sm"
-                >
-                  Tên đăng nhập
-                </Label>
+                <Label htmlFor="username">Tên đăng nhập</Label>
                 <Input
-                  type="text"
                   id="username"
                   placeholder="moji"
                   {...register("username")}
@@ -108,34 +111,31 @@ export function SigninForm({ className, ...props }: React.ComponentProps<"div">)
 
               {/* password */}
               <div className="flex flex-col gap-3">
-                <Label
-                  htmlFor="password"
-                  className="block text-sm"
-                >
-                  Mật khẩu
-                </Label>
+                <Label htmlFor="password">Mật khẩu</Label>
                 <div className="relative">
-                <Input
-                  type={showPassword ? "text" : "password"}
-                  id="password"
-                  {...register("password")}
-                  className="pr-20"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-2 text-muted-foreground text-xs"
-                >
-                  {showPassword ? (
-                    <>
-                      <EyeOff className="inline-block w-4 h-4 mr-1" /> {t?.hide || "HIDE"}
-                    </>
-                  ) : (
-                    <>
-                      <Eye className="inline-block w-4 h-4 mr-1" /> {t?.show || "SHOW"}
-                    </>
-                  )}
-                </button>
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    {...register("password")}
+                    className="pr-20"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-2 text-muted-foreground text-xs"
+                  >
+                    {showPassword ? (
+                      <>
+                        <EyeOff className="inline-block w-4 h-4 mr-1" />{" "}
+                        {t?.hide || "HIDE"}
+                      </>
+                    ) : (
+                      <>
+                        <Eye className="inline-block w-4 h-4 mr-1" />{" "}
+                        {t?.show || "SHOW"}
+                      </>
+                    )}
+                  </button>
                 </div>
                 {errors.password && (
                   <p className="text-destructive text-sm">
@@ -144,26 +144,19 @@ export function SigninForm({ className, ...props }: React.ComponentProps<"div">)
                 )}
               </div>
 
-              {/* nút đăng nhập */}
-              <Button
-                type="submit"
-                className="w-full text-white"
-                disabled={isSubmitting}
-              >
+              <Button type="submit" disabled={isSubmitting}>
                 Đăng nhập
               </Button>
 
               <div className="text-center text-sm">
                 Chưa có tài khoản?{" "}
-                <Link
-                  href="/signup"
-                  className="underline underline-offset-4"
-                >
+                <Link href="/signup" className="underline">
                   Đăng ký
                 </Link>
               </div>
             </div>
           </form>
+
           <div className="bg-muted relative hidden md:block">
             <Image
               src="/modern-login-illustration-with-people-and-mobile-app.jpg"
@@ -175,10 +168,6 @@ export function SigninForm({ className, ...props }: React.ComponentProps<"div">)
           </div>
         </CardContent>
       </Card>
-      <div className=" text-xs text-balance px-6 text-center *:[a]:hover:text-primary text-muted-foreground *:[a]:underline *:[a]:underline-offetset-4">
-        Bằng cách tiếp tục, bạn đồng ý với <Link href="/terms">Điều khoản dịch vụ</Link> và{" "}
-        <Link href="/privacy">Chính sách bảo mật</Link> của chúng tôi.
-      </div>
     </div>
   );
 }
