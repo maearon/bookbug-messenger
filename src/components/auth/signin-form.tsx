@@ -147,7 +147,7 @@ export function SigninForm({ className, ...props }: React.ComponentProps<"div">)
               {/* nút đăng nhập */}
               <Button
                 type="submit"
-                className="w-full text-muted-foreground"
+                className="w-full text-white"
                 disabled={isSubmitting}
               >
                 Đăng nhập
