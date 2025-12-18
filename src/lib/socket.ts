@@ -6,7 +6,7 @@ let socket: Socket | null = null;
 const BASE_URL =
   process.env.NODE_ENV === "development"
     ? "http://localhost:5001"
-    : "https://moji-realtimechatapp.onrender.com"
+    : "https://node-boilerplate-pww8.onrender.com"
 
 export const getSocket = (token: string): Socket => {
   if (!socket) {
