@@ -13,6 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Loader2, RefreshCw, UserCheck } from "lucide-react"
 import { friendService } from "@/api/services/friendService"
+import { toast } from "sonner"
 
 // UI type (normalized)
 interface FriendRequestUI {
@@ -141,11 +142,15 @@ export function FriendRequestsDialog() {
     try {
       const res = await friendService.responseFriendRequest(id, action)
 
+    //   console.log("handleRequest response:", res)
+      toast.success(`${action === "accept" ? "Accepted" : "Declined"} friend request!`)
+
       // remove from UI
       setReceivedRequests((prev) => prev.filter((r) => r.id !== id))
       setSentRequests((prev) => prev.filter((r) => r.id !== id))
     } catch (e) {
       console.error("handleRequest error:", e)
+      toast.error(e?.response?.data?.message || "ACCEPT / REJECT failed")
     }
   }
 

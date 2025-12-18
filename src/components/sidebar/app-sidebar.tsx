@@ -15,9 +15,13 @@ import {
 import { Moon, Sun, Twitter } from "lucide-react";
 import { Switch } from "../ui/switch";
 import CreateNewChat from "../chat/CreateNewChat";
+import NewDirectChatDialog from "@/components/chat/NewDirectChatDialog";
 import NewGroupChatModal from "../chat/NewGroupChatModal";
+import NewGroupChatDialog from "@/components/chat/NewGroupChatDialog";
 import GroupChatList from "../chat/GroupChatList";
+import FriendRequestsDialog from "@/components/chat/FriendRequestsDialog";
 import AddFriendModal from "../chat/AddFriendModal";
+import FriendSuggestionsDialog from "@/components/chat/FriendSuggestionsDialog";
 import DirectMessageList from "../chat/DirectMessageList";
 import { registerNextThemeSetter, useThemeStore } from "@/stores/useThemeStore";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -87,6 +91,43 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarGroup>
           <SidebarGroupContent>
             <CreateNewChat />
+            <NewDirectChatDialog />
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* People you may know */}
+        <SidebarGroup>
+          <SidebarGroupLabel className="uppercase">
+            People you may know
+          </SidebarGroupLabel>
+          <SidebarGroupAction title="People you may know" className="cursor-pointer">
+            <FriendSuggestionsDialog />
+          </SidebarGroupAction>
+        </SidebarGroup>
+
+        {/* Friends Requests */}
+        <SidebarGroup>
+          <SidebarGroupLabel className="uppercase">
+            Friends Requests
+          </SidebarGroupLabel>
+          <SidebarGroupAction title="Friends Requests" className="cursor-pointer">
+            <FriendRequestsDialog />
+          </SidebarGroupAction>
+        </SidebarGroup>
+
+        {/* Dirrect Message */}
+        <SidebarGroup>
+          <SidebarGroupLabel className="uppercase">bạn bè</SidebarGroupLabel>
+          <SidebarGroupAction
+            title="Kết Bạn"
+            className="cursor-pointer"
+          >
+            <AddFriendModal />
+            <FriendSuggestionsDialog />
+          </SidebarGroupAction>
+
+          <SidebarGroupContent>
+            <DirectMessageList />
           </SidebarGroupContent>
         </SidebarGroup>
 
@@ -98,25 +139,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             className="cursor-pointer"
           >
             <NewGroupChatModal />
+            <NewGroupChatDialog />
           </SidebarGroupAction>
 
           <SidebarGroupContent>
             <GroupChatList />
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        {/* Dirrect Message */}
-        <SidebarGroup>
-          <SidebarGroupLabel className="uppercase">bạn bè</SidebarGroupLabel>
-          <SidebarGroupAction
-            title="Kết Bạn"
-            className="cursor-pointer"
-          >
-            <AddFriendModal />
-          </SidebarGroupAction>
-
-          <SidebarGroupContent>
-            <DirectMessageList />
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>

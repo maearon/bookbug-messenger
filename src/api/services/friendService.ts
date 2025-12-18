@@ -1,4 +1,5 @@
 import api from "@/lib/axios";
+import { Friend } from "@/types/user";
 
 export const friendService = {
   async searchByUsername(username: string) {
@@ -41,5 +42,41 @@ export const friendService = {
   async getFriendList() {
     const res = await api.get("/friends");
     return res.data.friends;
+  },
+
+  /**
+   * GET /friends/dialog
+   * - Nếu không truyền q → trả về toàn bộ friend list
+   * - Nếu truyền q → backend sẽ filter theo q
+   */
+  getFriendsDialog: async (q?: string): Promise<{ friends: Friend[] }> => {
+    const res = await api.get("/friends/dialog", {
+      params: q ? { q } : {},
+    });
+
+    return res.data;
+  },
+
+  /**
+   * GET /friends/suggestions
+   * - Nếu không truyền q → trả về toàn bộ friends suggestions list
+   * - Nếu truyền q → backend sẽ filter theo q
+   */
+  getFriendsSuggestionsDialog: async (q?: string): Promise<{ friends: Friend[] }> => {
+    const res = await api.get("/friends/suggestions", {
+      params: q ? { q } : {},
+    });
+
+    return res.data;
+  },
+
+  getFriendRequests: async () => {
+    const res = await api.get("/friends/requests/dialog");
+    return res.data;
+  },
+
+  responseFriendRequest: async (id: string, action: string) => {
+    const res = await api.post(`/friends/requests/${id}/${action}/dialog`);
+    return res.data;
   },
 };

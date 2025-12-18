@@ -17,6 +17,8 @@ import { Loader2, RefreshCw, UserPlus, UserSearch } from "lucide-react";
 import { friendService } from "@/api/services/friendService";
 import { getAccessToken } from "@/lib/token";
 import { toast } from "sonner";
+import { useFriendStore } from "@/stores/useFriendStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 interface AddFriendDialogProps {
   forProfilePage?: boolean;
@@ -34,6 +36,7 @@ interface SuggestionUser {
 export function FriendSuggestionsDialog({
   forProfilePage = false,
 }: AddFriendDialogProps) {
+  const { user } = useAuthStore();
   const accessToken = getAccessToken();
 
   const [open, setOpen] = useState(false);
@@ -43,6 +46,7 @@ export function FriendSuggestionsDialog({
   const [isLoading, setIsLoading] = useState(false);
   const [isReloading, setIsReloading] = useState(false);
   const [isSending, setIsSending] = useState<string | null>(null);
+  const { loading, searchByUsername, addFriend } = useFriendStore();
 
   // -------------------------------------------------
   // Delay >= 3s wrapper
@@ -68,28 +72,36 @@ export function FriendSuggestionsDialog({
   // -------------------------------------------------
   // Fetch API suggestions
   // -------------------------------------------------
-  const BASE_URL =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:5001/api"
-    : "https://node-boilerplate-pww8.onrender.com/api"
+//   const BASE_URL =
+//   process.env.NODE_ENV === "development"
+//     ? "http://localhost:5001/api"
+//     : "https://node-boilerplate-pww8.onrender.com/api"
   const loadSuggestions = async () => {
     try {
-      const response = await fetch(
-        `${BASE_URL}/friends/suggestions?q=${encodeURIComponent(
-          query
-        )}`,
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        }
-      );
+    //   const response = await fetch(
+    //     `${BASE_URL}/friends/suggestions?q=${encodeURIComponent(
+    //       query
+    //     )}`,
+    //     {
+    //       headers: { Authorization: `Bearer ${accessToken}` },
+    //     }
+    //   );
 
-      if (!response.ok) throw new Error("Failed to load suggestions");
+    //   if (!response.ok) throw new Error("Failed to load suggestions");
 
-      const data = await response.json();
+    //   const data = await response.json();
+        const response: any = await friendService.getFriendsSuggestionsDialog(encodeURIComponent(query));
 
-      const normalized = (data.users || []).map((u: any) => ({
+        if (!response) throw new Error("Failed to load suggestions");
+
+        // const data = await response.json();
+
+        console.log("data:", response);
+
+      const normalized = (response.users || []).map((u: any) => ({
         _id: u._id,
-        name: u.name,
+        username: u.username,
+        name: u.name || u.displayName,
         email: u.email,
         avatar: u.avatar,
         isFriend: u.isFriend,
@@ -132,11 +144,23 @@ export function FriendSuggestionsDialog({
   const handleSendRequest = async (userId: string) => {
     setIsSending(userId);
 
-    try {
-      const res = await friendService.addFriend(userId);
+    // console.log("userId:", userId);
+    // console.log("user?._id:", user?._id);
 
-      if (res.status === 201) {
-        toast.success(res.data.msg);
+    if (userId === user?._id) {
+      toast.error("Bạn không thể kết bạn với chính mình"); // đã lọc chính mình từ backend nên sẽ không xảy ra
+      setIsSending(null);
+      return;
+    }
+
+    try {
+      // const res = await friendService.addFriend(userId);
+      const message = await addFriend(userId, "Kết bạn nhé!");
+
+      // console.log("userId message:", message);
+
+      if (message) {
+        toast.success(message);
 
         setSuggestions((prev) => prev.filter((u) => u._id !== userId));
       } else {
