@@ -4,7 +4,7 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import type { Conversation } from "@/types/chat";
 import { useState } from "react";
 import { Button } from "../ui/button";
-import { ImagePlus, Send } from "lucide-react";
+import { ImagePlus, Paperclip, Send } from "lucide-react";
 import { Input } from "../ui/input";
 import EmojiPicker from "./EmojiPicker";
 import { useChatStore } from "@/stores/useChatStore";
@@ -13,14 +13,14 @@ import { toast } from "sonner";
 const MessageInput = ({ selectedConvo }: { selectedConvo: Conversation }) => {
   const { user } = useAuthStore();
   const { sendDirectMessage, sendGroupMessage } = useChatStore();
-  const [value, setValue] = useState("");
+  const [message, setMessage] = useState("");
 
   if (!user) return;
 
   const sendMessage = async () => {
-    if (!value.trim()) return;
-    const currValue = value;
-    setValue("");
+    if (!message.trim()) return;
+    const currValue = message;
+    setMessage("");
 
     try {
       if (selectedConvo.type === "direct") {
@@ -45,47 +45,49 @@ const MessageInput = ({ selectedConvo }: { selectedConvo: Conversation }) => {
 
   return (
     <div className="flex items-center gap-2 p-3 min-h-[56px] bg-background">
-      <Button
-        variant="ghost"
-        size="icon"
-        className="hover:bg-primary/10 transition-smooth"
-      >
+      <Button variant="ghost" size="icon" className="hover:bg-primary/10 transition-smooth">
+        <Paperclip className="size-4" />
+      </Button>
+      
+      <Button variant="ghost" size="icon" className="hover:bg-primary/10 transition-smooth">
         <ImagePlus className="size-4" />
       </Button>
 
       <div className="flex-1 relative">
         <Input
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
           onKeyPress={handleKeyPress}
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          placeholder="Soạn tin nhắn..."
-          className="pr-20 h-9 bg-white border-border/50 focus:border-primary/50 transition-smooth resize-none"
-        ></Input>
-        <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
-          <Button
-            asChild
-            variant="ghost"
-            size="icon"
-            className="size-8 hover:bg-primary/10 transition-smooth"
-          >
-            <div>
-              <EmojiPicker
-                // onChange={(emoji: string) => setValue(`${value}${emoji}`)}
-              />
-            </div>
+          placeholder="Type your message..."
+          className="h-9 pr-20 bg-white text-black dark:bg-neutral-900 dark:text-white border-border/50 focus:border-primary/50 transition-smooth"
+        />
+
+        <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
+          <Button variant="ghost" size="icon" className="size-8 hover:bg-primary/10 transition-smooth">
+            <EmojiPicker 
+              // onchange={(emoji: string) => setMessage(message + emoji)} 
+            />
           </Button>
         </div>
       </div>
 
-      <Button
-        onClick={sendMessage}
-        className="bg-gradient-chat hover:shadow-glow transition-smooth hover:scale-105"
-        disabled={!value.trim()}
+      {/* <Button
+        size="icon"
+        className="bg-gradient-chat hover:shadow-grow transition-smooth hover:scale-105 size-8"
+        onClick={handleSend}
+        disabled={!message.trim()}
       >
         <Send className="size-4 text-white" />
+      </Button> */}
+      <Button
+        onClick={sendMessage}
+        disabled={!message.trim()}
+        className="h-12 w-12 rounded-full bg-gradient-to-r from-purple-600 to-fuchsia-600 p-0 hover:from-purple-700 hover:to-fuchsia-700"
+      >
+        <Send className="size-4" />
       </Button>
     </div>
-  );
-};
+  )
+}
 
 export default MessageInput;
