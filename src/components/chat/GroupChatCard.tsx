@@ -85,7 +85,7 @@ const GroupChatCard = ({ convo }: { convo: Conversation }) => {
           ) : lastMessage ? (
             <>
               <span className="font-medium">
-                {sender?.displayName ?? "Ai đó"}:
+                {sender?.displayName ?? "Bạn: "}:
               </span>{" "}
               {lastMessage.content} ({convo.participants.length}) thành viên
             </>

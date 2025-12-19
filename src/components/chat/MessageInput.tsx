@@ -52,9 +52,11 @@ const MessageInput = ({ selectedConvo }: { selectedConvo: Conversation }) => {
         const otherUser = participants.filter((p) => p._id !== user._id)[0];
         playSendSound(); // ✅ PLAY SOUND CHO DIRECT MESSAGE
         await sendDirectMessage(otherUser._id, currValue);
+        playSendSound();
       } else {
         playSendSound(); // ✅ PLAY SOUND CHO GROUP MESSAGE
         await sendGroupMessage(selectedConvo._id, currValue);
+        playSendSound();
       }
     } catch (error) {
       console.error(error);
