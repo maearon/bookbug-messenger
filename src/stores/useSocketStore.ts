@@ -46,7 +46,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       const chatStore = useChatStore.getState();
       const myId = useAuthStore.getState().user?._id;
 
-      chatStore.addMessage(message);
+      chatStore.addMessage(message); // fix duplicate message issue đã useChatStore trong addMessage
 
       // 🔊 PLAY SOUND nếu KHÔNG phải message của mình
         if (message.senderId !== myId) {
@@ -78,6 +78,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     });
 
     socket.on("read-message", ({ conversation, lastMessage }) => {
+      if (!conversation?._id) return; // safeguard
       useChatStore.getState().updateConversation({
         _id: conversation._id,
         lastMessage,
@@ -87,10 +88,17 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       });
     });
 
-    socket.on("new-group", (conversation) => {
+    socket.on("new-direct", (conversation) => {
       const chatStore = useChatStore.getState();
       chatStore.addConvo(conversation);
-      socket.emit("join-conversation", conversation._id);
+      socket.emit("join-conversation", conversation._id); // đã được join trong backend khi tạo conversation
+    });
+
+    socket.on("new-group", (conversation) => {
+      useChatStore.getState().addConvo(conversation);
+      // const chatStore = useChatStore.getState();
+      // chatStore.addConvo(conversation);
+      socket.emit("join-conversation", conversation._id); // đã được join trong backend khi tạo conversation
     });
   },
 

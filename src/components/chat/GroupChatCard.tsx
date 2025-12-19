@@ -1,3 +1,5 @@
+"use client";
+
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useChatStore } from "@/stores/useChatStore";
 import type { Conversation } from "@/types/chat";
@@ -5,19 +7,23 @@ import ChatCard from "./ChatCard";
 import UnreadCountBadge from "./UnreadCountBadge";
 import GroupChatAvatar from "./GroupChatAvatar";
 import { useSocketStore } from "@/stores/useSocketStore";
-import { LoadingDots } from "../products/enhanced-product-form";
 import TypingDots from "./TypingDots";
 
 const GroupChatCard = ({ convo }: { convo: Conversation }) => {
   const { typingUsers } = useSocketStore();
   const { user } = useAuthStore();
-  const { activeConversationId, setActiveConversation, messages, fetchMessages } =
-    useChatStore();
+  const {
+    activeConversationId,
+    setActiveConversation,
+    messages,
+    fetchMessages,
+  } = useChatStore();
 
   if (!user) return null;
 
-  const unreadCount = convo.unreadCounts[user._id];
+  const unreadCount = convo.unreadCounts?.[user._id] ?? 0;
   const name = convo.group?.name ?? "";
+
   const handleSelectConversation = async (id: string) => {
     setActiveConversation(id);
     if (!messages[id]) {
@@ -25,15 +31,32 @@ const GroupChatCard = ({ convo }: { convo: Conversation }) => {
     }
   };
 
-  const isTyping = (typingUsers[convo._id]?.length ?? 0) > 0;
+  const lastMessage = convo.lastMessage;
+
+  // ✅ FIX: dùng senderId thay vì sender
+  const senderId =
+    typeof lastMessage?.senderId === "string"
+      ? lastMessage.senderId
+      : lastMessage?.senderId?._id;
+
+  const sender = convo.participants.find(
+    (p) => p._id === senderId
+  );
+
+  const typingUserIds =
+    (typingUsers[convo._id] ?? []).filter(
+      (id) => id !== user._id
+    );
+
+  const isTyping = typingUserIds.length > 0;
 
   return (
     <ChatCard
       convoId={convo._id}
       name={name}
       timestamp={
-        convo.lastMessage?.createdAt
-          ? new Date(convo.lastMessage.createdAt)
+        lastMessage?.createdAt
+          ? new Date(lastMessage.createdAt)
           : undefined
       }
       isActive={activeConversationId === convo._id}
@@ -41,7 +64,9 @@ const GroupChatCard = ({ convo }: { convo: Conversation }) => {
       unreadCount={unreadCount}
       leftSection={
         <>
-          {unreadCount > 0 && <UnreadCountBadge unreadCount={unreadCount} />}
+          {unreadCount > 0 && (
+            <UnreadCountBadge unreadCount={unreadCount} />
+          )}
           <GroupChatAvatar
             participants={convo.participants}
             type="chat"
@@ -55,9 +80,18 @@ const GroupChatCard = ({ convo }: { convo: Conversation }) => {
       // }
       subtitle={
         <p className="text-sm truncate text-muted-foreground">
-          {isTyping
-            ? <TypingDots />
-            : `${convo.participants.length} thành viên`}
+          {isTyping ? (
+            <TypingDots />
+          ) : lastMessage ? (
+            <>
+              <span className="font-medium">
+                {sender?.displayName ?? "Ai đó"}:
+              </span>{" "}
+              {lastMessage.content} ({convo.participants.length}) thành viên
+            </>
+          ) : (
+            `${convo.participants.length} thành viên`
+          )}
         </p>
       }
     />

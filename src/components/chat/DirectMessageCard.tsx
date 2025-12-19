@@ -23,7 +23,15 @@ const DirectMessageCard = ({ convo }: { convo: Conversation }) => {
   if (!otherUser) return null;
 
   const unreadCount = convo.unreadCounts[user._id];
-  const lastMessage = parseEmoji(convo.lastMessage?.content ?? "");
+  // const lastMessage = parseEmoji(convo.lastMessage?.content ?? "");
+  const isOwnLastMessage =
+  convo.lastMessage?.sender?._id === user._id
+
+  const lastMessage = parseEmoji(
+    isOwnLastMessage
+      ? `Bạn: ${convo.lastMessage?.content ?? ""}`
+      : convo.lastMessage?.content ?? ""
+  );
 
   const handleSelectConversation = async (id: string) => {
     setActiveConversation(id);

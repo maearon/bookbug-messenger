@@ -2,7 +2,7 @@
 
 import { useAuthStore } from "@/stores/useAuthStore";
 import type { Conversation } from "@/types/chat";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { ImagePlus, Paperclip, Send } from "lucide-react";
 import { Input } from "../ui/input";
@@ -15,8 +15,25 @@ import { useSocketStore } from "@/stores/useSocketStore";
 const MessageInput = ({ selectedConvo }: { selectedConvo: Conversation }) => {
   const { socket } = useSocketStore();
   const { user } = useAuthStore();
-  const { sendDirectMessage, sendGroupMessage } = useChatStore();
+  const { activeConversationId, sendDirectMessage, sendGroupMessage } = useChatStore();
   const [message, setMessage] = useState("");
+  const prevConvoIdRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    // 🔴 STOP typing ở conversation cũ
+    if (prevConvoIdRef.current && socket) {
+      socket.emit("typing", {
+        conversationId: prevConvoIdRef.current,
+        isTyping: false,
+      });
+    }
+    
+    // clear input
+    setMessage(""); // Clear message input when conversation changes TODO: Draft: save unsent messages per and show in subtitle in DirectChatListItem
+
+    // cập nhật convo hiện tại
+    prevConvoIdRef.current = activeConversationId;
+  }, [activeConversationId]);
 
   if (!user) return;
 

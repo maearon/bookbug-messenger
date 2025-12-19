@@ -115,6 +115,12 @@ export function FriendSuggestionsDialog({
         normalized = normalized.filter((u: any) => u._id !== friend._id);
       });
 
+      // remove pending requests
+      const pendingIds = new Set(Object.keys(response.pendingMap ?? {}));
+      normalized = normalized.filter(
+        (u: any) => !pendingIds.has(u._id)
+      );
+
       setSuggestions(normalized);
     } catch (err) {
       console.error(err);
