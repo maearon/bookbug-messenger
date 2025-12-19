@@ -55,7 +55,7 @@ export default function ProfileWindowLayout() {
                   <p className="text-sm font-medium text-muted-foreground">Email</p>
                   <p>{user?.email}</p>
                 </div>
-                {user?.bio && (
+                {(user?.bio || "Will code for food 💻") && (
                   <div>
                     <p className="text-sm font-medium text-muted-foreground">Bio</p>
                     <p>{user.bio || "Will code for food 💻"}</p>

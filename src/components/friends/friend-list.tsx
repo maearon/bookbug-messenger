@@ -5,14 +5,16 @@ import { useSocketStore } from "@/stores/useSocketStore"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import type { User as UserDTO  } from "@/lib/auth"
+// import type { User as UserDTO  } from "@/lib/auth"
 import { SOCKET_EVENTS } from "@/lib/socket/socket-server"
 import { friendService } from "@/api/services/friendService"
-import { authClient } from "@/lib/auth-client"
+// import { authClient } from "@/lib/auth-client"
+import { useAuthStore } from "@/stores/useAuthStore"
 
 interface Friend {
   id: string;
   name: string;
+  userName?: string;
   email: string;
   role?: string;
   avatar?: string;
@@ -24,8 +26,9 @@ interface FriendResponse {
 }
 
 export function FriendList() {
-  const { data: sessionClient } = authClient.useSession();
-  const userBetterAuth = sessionClient?.user ?? null;
+  // const { data: sessionClient } = authClient.useSession();
+  // const userBetterAuth = sessionClient?.user ?? null;
+  const { user: userBetterAuth } = useAuthStore();
   const { socket, onlineUsers } = useSocketStore();
   const [friends, setFriends] = useState<Friend[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -50,9 +53,10 @@ export function FriendList() {
       let list =
         res.friends?.map((f) => ({
           id: f._id, // FIX: MAP _id → id
-          name: f.displayName || "Unknown",
-          email: f.username || "unknown",
-          role: f.displayName || "user",
+          name: f.name || f.displayName || "Unknown",
+          userName: f.username || f.email.split("@")[0] || "unknown",
+          email: f.email || "unknown",
+          role: f.role || "user",
           avatar: f.avatarUrl || "/avatar-placeholder.svg",
           isOnline: onlineUsers.includes(f._id) ? true : false,
         })) || [];
@@ -92,7 +96,7 @@ export function FriendList() {
                 </Avatar>
                 <div className="flex-1">
                   <p className="font-medium">{friend.name || friend?.displayName}</p>
-                  <p className="text-sm text-muted-foreground">@{friend?.username || friend.email.split("@")[0]}</p>
+                  <p className="text-sm text-muted-foreground">@{friend?.userName || friend.email.split("@")[0]}</p>
                 </div>
                 <Badge variant={friend.isOnline ? "default" : "secondary"}>
                   {friend.isOnline ? "Online" : "Offline"}

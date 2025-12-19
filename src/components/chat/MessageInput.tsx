@@ -45,9 +45,9 @@ const MessageInput = ({ selectedConvo }: { selectedConvo: Conversation }) => {
 
   return (
     <div className="flex items-center gap-2 p-3 min-h-[56px] bg-background">
-      <Button variant="ghost" size="icon" className="hover:bg-primary/10 transition-smooth">
+      {/* <Button variant="ghost" size="icon" className="hover:bg-primary/10 transition-smooth">
         <Paperclip className="size-4" />
-      </Button>
+      </Button> */}
       
       <Button variant="ghost" size="icon" className="hover:bg-primary/10 transition-smooth">
         <ImagePlus className="size-4" />
@@ -58,7 +58,8 @@ const MessageInput = ({ selectedConvo }: { selectedConvo: Conversation }) => {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyPress={handleKeyPress}
-          placeholder="Type your message..."
+          // placeholder="Type your message..."
+          placeholder="Soạn tin nhắn..."
           className="h-9 pr-8 sm:pr-20 bg-white text-black dark:bg-neutral-900 dark:text-white border-border/50 focus:border-primary/50 transition-smooth"
         />
 

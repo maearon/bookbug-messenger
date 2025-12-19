@@ -20,12 +20,16 @@ import { Pencil } from "lucide-react"
 import { useAuthStore } from "@/stores/useAuthStore"
 
 export function ProfileEditDialog() {
-  const { user } = useAuthStore();
+  const { user, accessToken } = useAuthStore();
   const [open, setOpen] = useState(false)
   const [formData, setFormData] = useState({
     name: user?.name || "",
-    bio: user?.name || "",
-    avatar: user?.image || "",
+    bio: user?.bio || "",
+    avatar: user?.avatarUrl || "",
+    displayName: user?.displayName || "",
+    email: user?.email || "",
+    username: user?.username || "",
+    phone: user?.phone || "",
   })
   const [isLoading, setIsLoading] = useState(false)
 
@@ -34,7 +38,11 @@ export function ProfileEditDialog() {
     setIsLoading(true)
 
     try {
-      const response = await fetch(`/api/v1/users/${user?.id}`, {
+      const BASE_URL =
+        process.env.NODE_ENV === "development"
+          ? "http://localhost:5001/api"
+          : "https://node-boilerplate-pww8.onrender.com/api"
+      const response = await fetch(`${BASE_URL}/users/${user?._id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -95,6 +103,46 @@ export function ProfileEditDialog() {
                 value={formData.avatar}
                 onChange={(e) => setFormData({ ...formData, avatar: e.target.value })}
                 placeholder="https://..."
+                disabled={isLoading}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="displayName">Display Name</Label>
+              <Input
+                id="displayName"
+                value={formData.displayName}
+                onChange={(e) => setFormData({ ...formData, displayName: e.target.value })}
+                placeholder="Enter display name..."
+                disabled={isLoading}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                placeholder="Enter email..."
+                disabled={isLoading}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="username">Username</Label>
+              <Input
+                id="username"
+                value={formData.username}
+                onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                placeholder="Enter username..."
+                disabled={isLoading}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="phone">Phone</Label>
+              <Input
+                id="phone"
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                placeholder="Enter phone number..."
                 disabled={isLoading}
               />
             </div>

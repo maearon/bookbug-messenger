@@ -99,7 +99,7 @@ export function FriendSuggestionsDialog({
 
         console.log("data:", response);
 
-      const normalized = (response.users || []).map((u: any) => ({
+      let normalized = (response.users || []).map((u: any) => ({
         _id: u._id,
         username: u.username || u.email.split("@")[0],
         name: u.name || u.displayName,
@@ -108,6 +108,12 @@ export function FriendSuggestionsDialog({
         isFriend: u.isFriend,
         isSelf: u.isSelf,
       }));
+      normalized = normalized.filter((f: any) => f._id !== user?._id); // remove yourself
+
+      // remove already friends
+      response.friends?.forEach((friend: any) => {
+        normalized = normalized.filter((u: any) => u._id !== friend._id);
+      });
 
       setSuggestions(normalized);
     } catch (err) {
