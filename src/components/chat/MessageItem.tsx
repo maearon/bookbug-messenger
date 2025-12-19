@@ -3,6 +3,7 @@ import type { Conversation, Message, Participant } from "@/types/chat";
 import UserAvatar from "./UserAvatar";
 import { Card } from "../ui/card";
 import { Badge } from "../ui/badge";
+import { parseEmoji } from "@/lib/emoji";
 
 interface MessageItemProps {
   message: Message;
@@ -74,7 +75,7 @@ const MessageItem = ({
               message.isOwn ? "chat-bubble-sent border-0" : "chat-bubble-received"
             )}
           >
-            <p className="text-sm leading-relaxed break-words">{message.content}</p>
+            <p className="text-sm leading-relaxed break-words">{parseEmoji(message.content)}</p>
           </Card>
 
           {/* seen/ delivered */}

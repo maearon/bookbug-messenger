@@ -4,6 +4,7 @@ import { useAuthStore } from "./useAuthStore";
 import { useChatStore } from "./useChatStore";
 import { getSocket, disconnectSocketInstance } from "@/lib/socket";
 import type { SocketState } from "@/types/store";
+import { playReceiveSound } from "@/lib/sound";
 
 export const useSocketStore = create<SocketState>((set, get) => ({
   socket: null,
@@ -27,8 +28,14 @@ export const useSocketStore = create<SocketState>((set, get) => ({
 
     socket.on("new-message", ({ message, conversation, unreadCounts }) => {
       const chatStore = useChatStore.getState();
+      const myId = useAuthStore.getState().user?._id;
 
       chatStore.addMessage(message);
+
+      // 🔊 PLAY SOUND nếu KHÔNG phải message của mình
+        if (message.senderId !== myId) {
+          playReceiveSound();
+        }
 
       const lastMessage = {
         _id: conversation.lastMessage._id,

@@ -7,6 +7,7 @@ import UserAvatar from "./UserAvatar";
 import StatusBadge from "./StatusBadge";
 import UnreadCountBadge from "./UnreadCountBadge";
 import { useSocketStore } from "@/stores/useSocketStore";
+import { parseEmoji } from "@/lib/emoji";
 
 const DirectMessageCard = ({ convo }: { convo: Conversation }) => {
   const { user } = useAuthStore();
@@ -20,7 +21,7 @@ const DirectMessageCard = ({ convo }: { convo: Conversation }) => {
   if (!otherUser) return null;
 
   const unreadCount = convo.unreadCounts[user._id];
-  const lastMessage = convo.lastMessage?.content ?? "";
+  const lastMessage = parseEmoji(convo.lastMessage?.content ?? "");
 
   const handleSelectConversation = async (id: string) => {
     setActiveConversation(id);

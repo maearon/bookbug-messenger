@@ -9,6 +9,7 @@ import { Input } from "../ui/input";
 import EmojiPicker from "./EmojiPicker";
 import { useChatStore } from "@/stores/useChatStore";
 import { toast } from "sonner";
+import { playSendSound } from "@/lib/sound";
 
 const MessageInput = ({ selectedConvo }: { selectedConvo: Conversation }) => {
   const { user } = useAuthStore();
@@ -27,6 +28,7 @@ const MessageInput = ({ selectedConvo }: { selectedConvo: Conversation }) => {
         const participants = selectedConvo.participants;
         const otherUser = participants.filter((p) => p._id !== user._id)[0];
         await sendDirectMessage(otherUser._id, currValue);
+        playSendSound();
       } else {
         await sendGroupMessage(selectedConvo._id, currValue);
       }
