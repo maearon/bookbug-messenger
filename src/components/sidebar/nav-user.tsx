@@ -1,6 +1,6 @@
 "use client"
 
-import { Bell, ChevronsUpDown, UserIcon } from "lucide-react";
+import { Bell, ChevronsUpDown, Settings, UserIcon } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -23,11 +23,19 @@ import Logout from "../auth/Logout";
 import { useState } from "react";
 import FriendRequestDialog from "../friendRequest/FriendRequestDialog";
 import ProfileDialog from "../profile/ProfileDialog";
+import { useRouter } from "next/navigation";
+
 
 export function NavUser({ user }: { user: User }) {
   const { isMobile } = useSidebar();
   const [friendRequestOpen, setfriendRequestOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const router = useRouter();
+
+  const routerServerGoto = (path: string) => {
+    // window.location.href = path;
+    router.push(path);
+  };
 
   return (
     <>
@@ -87,6 +95,10 @@ export function NavUser({ user }: { user: User }) {
                 <DropdownMenuItem onClick={() => setfriendRequestOpen(true)}>
                   <Bell className="text-muted-foreground dark:group-focus:!text-accent-foreground" />
                   Thông Báo
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => routerServerGoto("/profile")}>
+                  <Settings className="text-muted-foreground dark:group-focus:!text-accent-foreground" />
+                  Settings
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />

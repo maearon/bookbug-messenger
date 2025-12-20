@@ -24,7 +24,7 @@ const FriendListModal = ({ onClose }: FriendListModalProps) => {
   };
 
   return (
-    <DialogContent className="glass max-w-md">
+    <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} className="glass max-w-md">
       <DialogHeader>
         <DialogTitle className="flex items-center gap-2 text-xl capitalize">
           <MessageCircleMore className="size-5" />
