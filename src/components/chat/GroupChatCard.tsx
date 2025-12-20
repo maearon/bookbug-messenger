@@ -39,14 +39,16 @@ const GroupChatCard = ({ convo }: { convo: Conversation }) => {
   const lastMessageContent = parseEmoji(rawLastMessage?.content ?? "");
 
   // ✅ FIX: dùng senderId thay vì sender
-  // const senderId =
-  //   typeof lastMessage?.senderId === "string"
-  //     ? lastMessage.senderId
-  //     : lastMessage?.senderId?._id;
+  const lastMessage = convo.lastMessage;
+  const senderIdForOther =
+    typeof lastMessage?.senderId === "string"
+      ? lastMessage.senderId
+      : lastMessage?.senderId?._id;
 
   const lastMessageText =
     senderId === user._id
-      ? `Bạn: ${lastMessageContent}`
+      // ? `Bạn: ${lastMessageContent}`
+      ? `${lastMessageContent}`
       : lastMessageContent;
 
   const sender = convo.participants.find(
@@ -92,10 +94,10 @@ const GroupChatCard = ({ convo }: { convo: Conversation }) => {
         <p className="text-sm truncate text-muted-foreground">
           {isTyping ? (
             <TypingDots />
-          ) : lastMessageText ? (
+          ) : (lastMessageText && lastMessage && (senderId || senderIdForOther)) ? (
             <>
               <span className="font-medium">
-                {sender?._id === user._id ? "Bạn: " : `${sender?.displayName}: ` || ""}
+                {sender?._id === user._id ? "Bạn: " : `${senderIdForOther?.displayName}: ` || ""}
               </span>
               {/* {" "} */}
               {lastMessageText} ({convo.participants.length}) thành viên
