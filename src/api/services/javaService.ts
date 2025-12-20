@@ -77,7 +77,7 @@ const javaService = {
   // 🔄 Password Reset
   async sendForgotPasswordEmail(params: SendForgotPasswordEmailParams): Promise<WithStatus<PasswordResetCreateResponse> | undefined> {
     try {
-      const { data } = await axiosInstance.post<WithStatus<PasswordResetCreateResponse>>("/auth/forgot-password", params)
+      const { data } = await axiosInstance.post<WithStatus<PasswordResetCreateResponse>>(`${process.env.CLIENT_URL}/auth/forgot-password`, params)
       return data;
     } catch (error: unknown) {
       handleNetworkError(error)
@@ -87,7 +87,7 @@ const javaService = {
 
   async resetForForgotPassword(reset_token: string, params: PasswordResetUpdateParams): Promise<WithStatus<PasswordResetUpdateResponse> | undefined> {
     try {
-      const { data } = await axiosInstance.post<WithStatus<PasswordResetUpdateResponse>>(`/auth/reset-password?token=${reset_token}`, params)
+      const { data } = await axiosInstance.post<WithStatus<PasswordResetUpdateResponse>>(`${process.env.CLIENT_URL}/auth/reset-password?token=${reset_token}`, params)
       return data;
     } catch (error: unknown) {
       handleNetworkError(error)
@@ -98,7 +98,7 @@ const javaService = {
   // 📧 Account Activation
   async resendActivationEmail(params: ResendActivationEmailParams): Promise<WithStatus<ResendActivationEmailResponse> | undefined> {
     try {
-      const { data } = await axiosInstance.post<WithStatus<ResendActivationEmailResponse>>("/auth/send-verification-email", params)
+      const { data } = await axiosInstance.post<WithStatus<ResendActivationEmailResponse>>(`${process.env.CLIENT_URL}/auth/send-verification-email`, params)
       return data;
     } catch (error: unknown) {
       handleNetworkError(error)
@@ -108,7 +108,7 @@ const javaService = {
 
   async activateAccount(activation_token: string): Promise<WithStatus<ResendActivationEmailResponse> | undefined> {
     try {
-      const { data } = await axiosInstance.post<WithStatus<ResendActivationEmailResponse>>(`/auth/verify-email?token=${activation_token}`)
+      const { data } = await axiosInstance.post<WithStatus<ResendActivationEmailResponse>>(`${process.env.CLIENT_URL}/auth/verify-email?token=${activation_token}`)
       return data;
     } catch (error: unknown) {
       handleNetworkError(error)

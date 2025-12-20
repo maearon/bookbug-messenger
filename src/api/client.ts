@@ -3,14 +3,11 @@ import axios from "axios";
 
 const BASE_URL =
   process.env.NODE_ENV === "development"
-    ? "http://localhost:5001/v1"
-    : "https://node-boilerplate-pww8.onrender.com/v1"
-
-axios.defaults.withCredentials = true
+    ? "http://localhost:5001/api"
+    : "https://node-boilerplate-pww8.onrender.com/api"
 
 const api = axios.create({
-  baseURL:
-    BASE_URL,
+  baseURL: BASE_URL,
   withCredentials: true,
 });
 
@@ -33,30 +30,25 @@ api.interceptors.response.use(
 
     // những api không cần check
     if (
-      originalRequest.url.includes("/auth/login") ||
-      originalRequest.url.includes("/auth/register") ||
-      originalRequest.url.includes("/auth/refresh-tokens")
+      originalRequest.url.includes("/auth/signin") ||
+      originalRequest.url.includes("/auth/signup") ||
+      originalRequest.url.includes("/auth/refresh")
     ) {
       return Promise.reject(error);
     }
 
     originalRequest._retryCount = originalRequest._retryCount || 0;
 
-    if (error.response?.status === 401 && originalRequest._retryCount < 4) {
+    if (error.response?.status === 403 && originalRequest._retryCount < 4) {
       originalRequest._retryCount += 1;
 
       try {
-        const { refreshToken } = useAuthStore.getState();
-        const res = await axios.post(`${BASE_URL}/auth/refresh-tokens`, {
-          refreshToken,
-        })
-        const newAccessToken = res.data?.tokens?.access?.token;
-        const newRefreshToken = res.data?.tokens?.refresh?.token;
+        const res = await api.post("/auth/refresh", { withCredentials: true });
+        const newAccessToken = res.data.accessToken;
 
         useAuthStore.getState().setAccessToken(newAccessToken);
-        useAuthStore.getState().setRefreshToken(newRefreshToken);
 
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return api(originalRequest);
       } catch (refreshError) {
         useAuthStore.getState().clearState();

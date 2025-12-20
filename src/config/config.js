@@ -64,6 +64,7 @@ const config = {
     },
     from: envVars.EMAIL_FROM,
   },
+  clientUrl: envVars.CLIENT_URL || 'http://localhost:5001',
 };
 
 export default config;
