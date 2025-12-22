@@ -77,7 +77,7 @@ interface ResendVerificationButtonProps {
 }
 
 export function ResendVerificationButton({ emailProp }: ResendVerificationButtonProps) {
-  const [email, setEmail] = useState(emailProp);
+  const [email, setEmail] = useState(emailProp || "");
   const [errors, setErrors] = useState<ErrorMessages>({});
   const submitRef = useRef<HTMLButtonElement>(null);
   const [submitting, setSubmitting] = useState(false);

@@ -33,7 +33,9 @@ async function getUser(req: NextRequest, { params }: { params: { userId: string 
   }
 }
 
-export const GET = withAuth(getUser, ["getUsers"]);
+export const GET = withAuth(getUser, 
+  // ["getUsers"]
+);
 
 export async function PATCH(
   req: Request,

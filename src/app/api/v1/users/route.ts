@@ -33,4 +33,6 @@ async function getUsers(req: NextRequest) {
   }
 }
 
-export const GET = withAuth(getUsers, ["getUsers"]);
+export const GET = withAuth(getUsers, 
+  // ["getUsers"]
+);
