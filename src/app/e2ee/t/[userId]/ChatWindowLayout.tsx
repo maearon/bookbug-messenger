@@ -26,7 +26,7 @@
 //             <MessageCircle className="h-16 w-16 text-white" />
 //           </div>
 //           <h2 className="mb-2 bg-gradient-to-r from-purple-600 to-fuchsia-600 bg-clip-text text-3xl font-bold text-transparent">
-//             Chào mừng bạn đến với Bookbug!
+//             Chào mừng bạn đến với Bugbook!
 //           </h2>
 //           <p className="text-gray-600">Chọn một cuộc hội thoại để bắt đầu chat!</p>
 //         </div>
@@ -64,7 +64,7 @@
 //               <MessageCircle className="h-16 w-16 text-white" />
 //             </div>
 //             <h2 className="mb-2 bg-gradient-to-r from-purple-600 to-fuchsia-600 bg-clip-text text-3xl font-bold text-transparent">
-//               Chào mừng bạn đến với Bookbug!
+//               Chào mừng bạn đến với Bugbook!
 //             </h2>
 //             <p className="text-gray-600">Chọn một cuộc hội thoại để bắt đầu chat!</p>
 //           </div>

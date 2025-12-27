@@ -108,7 +108,7 @@
 //       <SidebarMenu>
 //       <SidebarMenuItem>
 //       <div className="flex items-center justify-between rounded-br-3xl rounded-tr-3xl bg-gradient-to-r from-purple-600 to-fuchsia-600 p-4">
-//         <h1 className="text-2xl font-bold text-white">Bookbug</h1>
+//         <h1 className="text-2xl font-bold text-white">Bugbook</h1>
 //         <div className="flex items-center gap-2">
 //           <Button
 //             variant="ghost"

@@ -90,7 +90,7 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
                   </div>
                 </Link>
 
-                <h1 className="text-2xl font-bold">Tạo tài khoản Bookbug</h1>
+                <h1 className="text-2xl font-bold">Tạo tài khoản Bugbook</h1>
                 <p className="text-muted-foreground">
                   Chào mừng bạn! Hãy đăng ký để bắt đầu!
                 </p>

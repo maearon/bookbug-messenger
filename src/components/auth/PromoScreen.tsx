@@ -13,7 +13,7 @@ const PromoScreen = () => {
           </div>
           <h1 className="mb-4 text-balance text-5xl font-bold tracking-tight text-gray-900 md:text-6xl lg:text-7xl">
             Chào mừng đến với{" "}
-            <span className="bg-gradient-to-r from-purple-600 to-fuchsia-600 bg-clip-text text-transparent">Bookbug</span>
+            <span className="bg-gradient-to-r from-purple-600 to-fuchsia-600 bg-clip-text text-transparent">Bugbook</span>
           </h1>
           <p className="mb-8 max-w-2xl text-pretty text-lg text-gray-600 md:text-xl">
             Kết nối với bạn bè, chia sẻ khoảnh khắc và trò chuyện theo thời gian thực. Trải nghiệm nhắn tin hiện đại với

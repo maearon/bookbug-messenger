@@ -24,7 +24,7 @@ const TypingIndicatorMessage = ({
       /> */}
       <UserAvatar
         type="chat"
-        name={userName ?? "Bookbug"}
+        name={userName ?? "Bugbook"}
         avatarUrl={avatarUrl ?? undefined}
       />
 

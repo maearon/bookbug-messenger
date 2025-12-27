@@ -1,4 +1,4 @@
-// Database Models for Bookbug Chat App
+// Database Models for Bugbook Chat App
 // These are TypeScript interfaces that can be used with MongoDB or PostgreSQL
 
 export interface User {
