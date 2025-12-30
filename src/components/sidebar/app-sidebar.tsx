@@ -15,12 +15,11 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Moon, Sun, Bug } from "lucide-react";
-import { Switch } from "../ui/switch";
 import CreateNewChat from "../chat/CreateNewChat";
 import CreateNewChatDialog from "@/components/chat/CreateNewChatDialog";
 import NewDirectChatDialog from "@/components/chat/NewDirectChatDialog";
 import NewGroupChatModal from "../chat/NewGroupChatModal";
-import NewGroupChatDialog from "@/components/chat/NewGroupChatDialog";
+// import NewGroupChatDialog from "@/components/chat/NewGroupChatDialog";
 import GroupChatList from "../chat/GroupChatList";
 import FriendRequestsDialog from "@/components/chat/FriendRequestsDialog";
 import AddFriendModal from "../chat/AddFriendModal";
@@ -33,6 +32,8 @@ import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import ConversationSkeleton from "../skeleton/ConversationSkeleton";
+import { useChatStore } from "@/stores/useChatStore";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { isDark, setTheme: setZustandTheme } = useThemeStore();
@@ -40,6 +41,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { theme, setTheme } = useTheme();
   const [hasNotification, setHasNotification] = useState(true);
   const [notificationCount, setNotificationCount] = useState(1);
+  const { convoLoading } = useChatStore();
   useEffect(() => {
     // Ưu tiên next-themes => sync vào Zustand
     if (theme) {
@@ -183,23 +185,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarGroupAction>
 
           <SidebarGroupContent>
-            <DirectMessageList />
+            {convoLoading ? <ConversationSkeleton /> : <DirectMessageList />}
           </SidebarGroupContent>
         </SidebarGroup>
 
         {/* Group Chat */}
         <SidebarGroup>
           <SidebarGroupLabel className="uppercase">nhóm chat</SidebarGroupLabel>
-          <SidebarGroupAction
-            title="Tạo Nhóm"
-            className="cursor-pointer"
-          >
+          <div className="flex items-center justify-between">
+            <SidebarGroupLabel className="uppercase">nhóm chat</SidebarGroupLabel>
             <NewGroupChatModal />
-            <NewGroupChatDialog />
-          </SidebarGroupAction>
+          </div>
 
           <SidebarGroupContent>
-            <GroupChatList />
+            {convoLoading ? <ConversationSkeleton /> : <GroupChatList />}
           </SidebarGroupContent>
         </SidebarGroup>
 
